@@ -1,0 +1,16 @@
+{
+  "Count": 1,
+  "Results": {
+    "12": {
+      "Id": "12",
+      "Number": "2023-E/00014",
+      "Type": "Invoice",
+      "ProjectId": "1234",
+      "AmountNet": "2000.00",
+      "AmountVat": "540.00",
+      "Amount": "2540.00",
+      "Paid": "0000-00-00",
+      "CurrencyCode": "EUR"
+    }
+  }
+}

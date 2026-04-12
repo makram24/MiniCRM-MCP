@@ -2,12 +2,11 @@
 
 Local **Model Context Protocol** server for **miniCRM** (scope: `docs/Teszt-Projekt-MCP.md`).
 
-## Current status: Phase 1 stub
+## Status
 
-Per **Phase 01** runbook (`docs/phases/Phase-01-Discovery-and-Schema-Mapping.md`):
-
-- This package proves **Node.js**, **TypeScript**, and **`@modelcontextprotocol/sdk`** with **stdio** transport.
-- **No miniCRM REST calls** and **no CRM tools** are registered yet — that is **Phase 2**.
+- **12 CRM tools** are registered (contacts, projects, tasks, invoices, schema).
+- **`MINICRM_USE_MOCK=true`** — responses come from `fixtures/*.json` (no network, no API key).
+- **`MINICRM_USE_MOCK=false`** (default) — **HTTPS + Basic auth** to `MINICRM_BASE_URL`, with a **60/min** sliding rate limit (override via `MINICRM_RATE_LIMIT_PER_MINUTE`).
 
 ## Requirements
 
@@ -27,13 +26,23 @@ Development (no separate build):
 npm run dev
 ```
 
-**Note:** When run under Claude Desktop, the process communicates on **stdin/stdout**. Do not pipe debug logs to stdout.
+API smoke script (real credentials only):
 
-## Environment (Phase 2+)
+```bash
+npm run smoke:api
+```
 
-Copy `.env.example` to `.env` and fill values. The Phase 1 stub does not read `.env` yet.
+**Note:** Under Claude Desktop the process uses **stdin/stdout** for MCP. Use **stderr** only for logs (`console.error`).
+
+## Environment
+
+Copy `.env.example` to `.env`.
+
+- **Mock development:** `MINICRM_USE_MOCK=true` — you can leave SystemId/API key empty.
+- **Live:** `MINICRM_USE_MOCK=false`, plus `MINICRM_SYSTEM_ID`, `MINICRM_API_KEY`, optional `MINICRM_BASE_URL`.
 
 ## Related documentation
 
-- `docs/phases/Phase-01-Discovery-and-Schema-Mapping.md`
-- `docs/deliverable-0/` — templates for **Deliverable 0** (schema discovery)
+- **`MOCK-AND-LIVE-REST.md`** — before REST access (mock), switching env, after go-live checks
+- `docs/phases/Phase-01-Discovery-and-Schema-Mapping.md`, `docs/phases/Phase-02-MCP-Server-and-Twelve-Tools.md`
+- `docs/deliverable-0/` — Deliverable 0 templates and API samples

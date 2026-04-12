@@ -5,6 +5,9 @@
  * Usage (from minicrm-mcp-server):
  *   node scripts/smoke-api.mjs
  *   set SMOKE_SAVE=1 && node scripts/smoke-api.mjs   (Windows PowerShell: $env:SMOKE_SAVE=1)
+ *
+ * Debug (no secrets printed):
+ *   $env:DEBUG_SMOKE="1"; npm run smoke:api
  */
 
 import fs from "node:fs";
@@ -54,12 +57,13 @@ function httpsGet(urlString, systemId, apiKey) {
     };
     https
       .get(opts, (res) => {
+        const headers = { ...res.headers };
         let data = "";
         res.on("data", (c) => {
           data += c;
         });
         res.on("end", () => {
-          resolve({ status: res.statusCode ?? 0, body: data });
+          resolve({ status: res.statusCode ?? 0, body: data, headers });
         });
       })
       .on("error", reject);
@@ -76,8 +80,9 @@ function firstCategoryId(categoryJson) {
   }
 }
 
-function saveSample(name, body) {
+function saveSample(name, body, status) {
   if (process.env.SMOKE_SAVE !== "1") return;
+  if (status < 200 || status >= 300) return;
   const outDir = path.resolve(root, "..", "docs", "deliverable-0", "api-samples");
   fs.mkdirSync(outDir, { recursive: true });
   const file = path.join(outDir, `${name}.json`);
@@ -97,12 +102,30 @@ async function main() {
     process.exit(1);
   }
 
+  if (process.env.DEBUG_SMOKE === "1") {
+    console.error(
+      "[debug] MINICRM_BASE_URL=",
+      base,
+      "| systemId char length=",
+      String(systemId).length,
+      "| apiKey char length=",
+      String(apiKey).length,
+      "(no values printed)"
+    );
+  }
+
   const results = [];
 
   async function run(name, url) {
-    const { status, body } = await httpsGet(url, systemId, apiKey);
+    const { status, body, headers } = await httpsGet(url, systemId, apiKey);
     results.push({ name, url: url.replace(apiKey, "***"), status, bytes: body.length });
-    saveSample(name, body);
+    if (process.env.DEBUG_SMOKE === "1") {
+      const w = headers["www-authenticate"];
+      const ct = headers["content-type"];
+      if (w) console.error("[debug]", name, "www-authenticate:", w);
+      if (ct) console.error("[debug]", name, "content-type:", ct);
+    }
+    saveSample(name, body, status);
     let preview = body.slice(0, 200).replace(/\s+/g, " ");
     if (body.length > 200) preview += "…";
     if (status < 200 || status >= 300) {

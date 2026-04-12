@@ -1,7 +1,7 @@
 {
   "name": "minicrm-mcp-server",
   "version": "0.1.0",
-  "description": "miniCRM MCP server — Phase 1 stub (toolchain only; 12 CRM tools in Phase 2 per scope)",
+  "description": "miniCRM MCP server — 12 CRM tools, mock or live REST (scope: docs/Teszt-Projekt-MCP.md)",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
@@ -13,10 +13,14 @@
   "engines": {
     "node": ">=18"
   },
-  "keywords": ["mcp", "minicrm"],
+  "keywords": [
+    "mcp",
+    "minicrm"
+  ],
   "license": "UNLICENSED",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
+    "dotenv": "^17.4.1",
     "zod": "^3.25.0"
   },
   "devDependencies": {

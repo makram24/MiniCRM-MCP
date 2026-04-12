@@ -1,0 +1,14 @@
+{
+  "Count": 2,
+  "Results": [
+    {
+      "Id": "1111",
+      "Status": "Open",
+      "Comment": "Call the customer and ask for feedback.",
+      "Deadline": "2023-03-20 23:59:00",
+      "UserId": "3200",
+      "Type": "0",
+      "Url": "https://r3.minicrm.hu/Api/R3/ToDo/1111"
+    }
+  ]
+}

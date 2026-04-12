@@ -1,0 +1,14 @@
+{
+  "Count": 1,
+  "Results": {
+    "37147": {
+      "Id": 37147,
+      "Name": "John Doe",
+      "Url": "https://r3.minicrm.hu/Api/R3/Contact/37147",
+      "Type": "Person",
+      "Email": "john.doe@example.com",
+      "Phone": "",
+      "BusinessId": 37146
+    }
+  }
+}

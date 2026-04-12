@@ -1,27 +1,42 @@
 /**
- * Phase 1 stub — per docs/phases/Phase-01-Discovery-and-Schema-Mapping.md
- *
- * - Proves Node + @modelcontextprotocol/sdk + stdio MCP transport.
- * - Does NOT register the 12 miniCRM tools (that is Phase 2 per Teszt-Projekt-MCP.md).
- *
- * IMPORTANT: Do not write to stdout except via the MCP transport (JSON-RPC).
- * Use console.error only for fatal startup errors.
+ * miniCRM MCP server — stdio transport, 12 CRM eszköz (hatókör: docs/Teszt-Projekt-MCP.md).
+ * MINICRM_USE_MOCK=true: fixture JSON-ek; egyébként Basic auth + HTTPS (rate limit 60/perc).
  */
 
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+import dotenv from "dotenv";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+
+import { loadMinicrmConfig, validateConfigForStartup } from "./config.js";
+import { createMinicrmBackend } from "./minicrm/factory.js";
+import { registerCrmTools } from "./register-crm-tools.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
+const cfg = loadMinicrmConfig();
+validateConfigForStartup(cfg);
+
+const backend = createMinicrmBackend(cfg);
 
 const mcpServer = new McpServer(
   {
     name: "minicrm-mcp",
-    version: "0.1.0-phase1-stub",
+    version: "0.2.0",
   },
   {
     instructions:
-      "Fázis 1: ez egy üres MCP szerver (még nincsenek miniCRM eszközök). " +
-      "A 12 CRM eszköz a Phase 2-ben kerül implementálásra a hatókör szerint.",
+      "miniCRM MCP: 12 olvasó/író eszköz kontaktokra, projektekre, teendőkre, számlákra és sémára. " +
+      (cfg.useMock
+        ? "Jelenleg MOCK módban fut — a válaszok fixtúrák, nem élő CRM."
+        : "Éles miniCRM REST API (Basic auth). Írási műveleteknél erősítsd meg a felhasználóval a tervet."),
   }
 );
+
+registerCrmTools(mcpServer, backend, { useMock: cfg.useMock });
 
 async function main(): Promise<void> {
   const transport = new StdioServerTransport();

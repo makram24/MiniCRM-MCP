@@ -1,0 +1,15 @@
+{
+  "Name": "Text(512)",
+  "StatusUpdatedAt": "DateTime",
+  "AutoSalesV3_Qualification": {
+    "421": "Unqualified",
+    "422": "Qualified",
+    "423": "VIP"
+  },
+  "AutoSalesV3_SalesStatus": {
+    "425": "Discovery",
+    "426": "In progress",
+    "427": "Won opportunity",
+    "428": "Lost opportunity"
+  }
+}
