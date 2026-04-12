@@ -2,6 +2,7 @@ import https from "node:https";
 import { URL } from "node:url";
 
 import type { MinicrmConfig } from "../config.js";
+import { ConcurrencyGate } from "./concurrency-gate.js";
 import { RateLimiter } from "./rate-limiter.js";
 import type { MinicrmBackend, MinicrmRequest, MinicrmResponse } from "./types.js";
 
@@ -17,12 +18,27 @@ function fullUrl(base: string, pathname: string, search?: string): URL {
   return new URL(path + q, baseForResolve);
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+/** Phase-02 Step 4.4 — exponential backoff + jitter (cap 30s). */
+function backoffMs(attemptIndex: number): number {
+  const base = 500;
+  const cap = 30_000;
+  const exp = Math.min(cap, base * 2 ** attemptIndex);
+  const jitter = Math.floor(Math.random() * 250);
+  return exp + jitter;
+}
+
 export class RealMinicrmBackend implements MinicrmBackend {
   private readonly limiter: RateLimiter;
+  private readonly gate: ConcurrencyGate;
   private readonly authHeader: string;
 
   constructor(private readonly cfg: MinicrmConfig) {
     this.limiter = new RateLimiter(cfg.rateLimitPerMinute);
+    this.gate = new ConcurrencyGate(cfg.maxConcurrentRequests);
     const token = Buffer.from(`${cfg.systemId}:${cfg.apiKey}`, "utf8").toString(
       "base64"
     );
@@ -30,7 +46,33 @@ export class RealMinicrmBackend implements MinicrmBackend {
   }
 
   async request(req: MinicrmRequest): Promise<MinicrmResponse> {
-    await this.limiter.acquire();
+    let last: MinicrmResponse = { status: 0, bodyText: "" };
+    for (let attempt = 0; attempt <= this.cfg.max429Retries; attempt++) {
+      await this.limiter.acquire();
+      await this.gate.acquire();
+      try {
+        last = await this.rawHttps(req);
+      } finally {
+        this.gate.release();
+      }
+
+      if (last.status !== 429 || attempt >= this.cfg.max429Retries) {
+        break;
+      }
+      await sleep(backoffMs(attempt));
+    }
+
+    if (this.cfg.debugHttp && last.bodyText.length > 0) {
+      const preview = last.bodyText.slice(0, 500).replace(/\s+/g, " ");
+      console.error(
+        `[MINICRM_DEBUG_HTTP] ${req.method} ${req.pathname} → ${last.status} len=${last.bodyText.length} ${preview}${last.bodyText.length > 500 ? "…" : ""}`
+      );
+    }
+
+    return last;
+  }
+
+  private rawHttps(req: MinicrmRequest): Promise<MinicrmResponse> {
     const u = fullUrl(this.cfg.baseUrl, req.pathname, req.search);
     const bodyStr =
       req.body !== undefined && req.body !== null

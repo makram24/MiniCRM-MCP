@@ -9,6 +9,12 @@ export type MinicrmConfig = {
   systemId: string;
   apiKey: string;
   rateLimitPerMinute: number;
+  /** Phase-02 Step 4.5 — parallel HTTPS cap (live). */
+  maxConcurrentRequests: number;
+  /** Phase-02 Step 4.4 — retries after HTTP 429 (live). */
+  max429Retries: number;
+  /** Phase-02 Step 5.3 — log truncated response bodies on stderr. */
+  debugHttp: boolean;
   /** Absolute path to `fixtures/` (for mock mode). */
   fixturesDir: string;
 };
@@ -33,6 +39,20 @@ function readEnv(): MinicrmConfig {
       ? Math.max(1, parseInt(rateRaw, 10) || 60)
       : 60;
 
+  const concurrentRaw = process.env.MINICRM_MAX_CONCURRENT;
+  const maxConcurrentRequests =
+    concurrentRaw !== undefined && concurrentRaw !== ""
+      ? Math.max(1, parseInt(concurrentRaw, 10) || 4)
+      : 4;
+
+  const retry429Raw = process.env.MINICRM_MAX_429_RETRIES;
+  const max429Retries =
+    retry429Raw !== undefined && retry429Raw !== ""
+      ? Math.max(0, parseInt(retry429Raw, 10) || 3)
+      : 3;
+
+  const debugHttp = truthyEnv(process.env.MINICRM_DEBUG_HTTP);
+
   const fixturesDir = path.resolve(__dirname, "../fixtures");
 
   return {
@@ -41,6 +61,9 @@ function readEnv(): MinicrmConfig {
     systemId,
     apiKey,
     rateLimitPerMinute,
+    maxConcurrentRequests,
+    max429Retries,
+    debugHttp,
     fixturesDir,
   };
 }

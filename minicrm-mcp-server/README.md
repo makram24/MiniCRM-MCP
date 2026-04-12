@@ -52,6 +52,7 @@ Copy `.env.example` to `.env`.
 
 - **Mock development:** `MINICRM_USE_MOCK=true` — you can leave SystemId/API key empty.
 - **Live:** `MINICRM_USE_MOCK=false`, plus `MINICRM_SYSTEM_ID`, `MINICRM_API_KEY`, optional `MINICRM_BASE_URL`.
+- **Phase 2 (live):** `MINICRM_MAX_CONCURRENT`, `MINICRM_MAX_429_RETRIES`, optional `MINICRM_DEBUG_HTTP`, `MINICRM_LOG_TOOLS` — see `.env.example`.
 
 ## Related documentation
 

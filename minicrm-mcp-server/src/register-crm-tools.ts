@@ -2,7 +2,13 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 
+import { appendEmptyListNote } from "./minicrm/empty-results.js";
+import {
+  buildHttpErrorPayload,
+  hungarianMessageForHttpStatus,
+} from "./minicrm/errors.js";
 import { coerceRecordId } from "./minicrm/ids.js";
+import { logToolInvocation, shouldLogToolInvocation } from "./minicrm/log.js";
 import { normalizeStatusIdForBody } from "./minicrm/project-status.js";
 import { buildSearchParamsString } from "./minicrm/search-params.js";
 import type { MinicrmBackend, MinicrmRequest } from "./minicrm/types.js";
@@ -24,23 +30,38 @@ function parseBodyJson(res: { status: number; bodyText: string }): unknown {
 async function execCrm(
   backend: MinicrmBackend,
   useMock: boolean,
-  req: MinicrmRequest
+  req: MinicrmRequest,
+  toolName: string
 ): Promise<CallToolResult> {
+  const t0 = Date.now();
   const res = await backend.request(req);
+  const ms = Date.now() - t0;
+  if (shouldLogToolInvocation(useMock)) {
+    logToolInvocation({
+      ts: new Date().toISOString(),
+      tool: toolName,
+      ms,
+      status: res.status,
+      path: req.pathname,
+    });
+  }
+
   const body = parseBodyJson(res);
   const prefix = useMock ? "[Mock] " : "";
-  const text = prefix + JSON.stringify(body, null, 2);
   if (res.status < 200 || res.status >= 300) {
+    const payload = buildHttpErrorPayload(useMock, res.status, body);
     return {
       isError: true,
       content: [
         {
           type: "text",
-          text: prefix + JSON.stringify({ status: res.status, body }, null, 2),
+          text: prefix + JSON.stringify(payload, null, 2),
         },
       ],
     };
   }
+  const text =
+    prefix + JSON.stringify(body, null, 2) + appendEmptyListNote(body);
   return { content: [{ type: "text", text }] };
 }
 
@@ -68,11 +89,16 @@ export function registerCrmTools(
         Email: email,
         Phone: telefon,
       });
-      return execCrm(backend, useMock, {
-        method: "GET",
-        pathname: "/Api/R3/Contact",
-        search,
-      });
+      return execCrm(
+        backend,
+        useMock,
+        {
+          method: "GET",
+          pathname: "/Api/R3/Contact",
+          search,
+        },
+        "kontakt_kereses"
+      );
     }
   );
 
@@ -86,10 +112,15 @@ export function registerCrmTools(
     },
     async ({ kontakt_id }) => {
       const id = coerceRecordId(kontakt_id);
-      return execCrm(backend, useMock, {
-        method: "GET",
-        pathname: `/Api/R3/Contact/${id}`,
-      });
+      return execCrm(
+        backend,
+        useMock,
+        {
+          method: "GET",
+          pathname: `/Api/R3/Contact/${id}`,
+        },
+        "kontakt_lekeres"
+      );
     }
   );
 
@@ -101,11 +132,16 @@ export function registerCrmTools(
       inputSchema: { mezok: mezokSchema },
     },
     async ({ mezok }) => {
-      return execCrm(backend, useMock, {
-        method: "PUT",
-        pathname: "/Api/R3/Contact",
-        body: mezok,
-      });
+      return execCrm(
+        backend,
+        useMock,
+        {
+          method: "PUT",
+          pathname: "/Api/R3/Contact",
+          body: mezok,
+        },
+        "kontakt_letrehozas"
+      );
     }
   );
 
@@ -121,11 +157,16 @@ export function registerCrmTools(
     },
     async ({ kontakt_id, mezok }) => {
       const id = coerceRecordId(kontakt_id);
-      return execCrm(backend, useMock, {
-        method: "PUT",
-        pathname: `/Api/R3/Contact/${id}`,
-        body: mezok,
-      });
+      return execCrm(
+        backend,
+        useMock,
+        {
+          method: "PUT",
+          pathname: `/Api/R3/Contact/${id}`,
+          body: mezok,
+        },
+        "kontakt_modositas"
+      );
     }
   );
 
@@ -154,11 +195,16 @@ export function registerCrmTools(
         Name: args.nev,
         Page: args.oldal !== undefined ? String(args.oldal) : undefined,
       });
-      return execCrm(backend, useMock, {
-        method: "GET",
-        pathname: "/Api/R3/Project",
-        search,
-      });
+      return execCrm(
+        backend,
+        useMock,
+        {
+          method: "GET",
+          pathname: "/Api/R3/Project",
+          search,
+        },
+        "projekt_kereses"
+      );
     }
   );
 
@@ -172,10 +218,15 @@ export function registerCrmTools(
     },
     async ({ projekt_id }) => {
       const id = coerceRecordId(projekt_id);
-      return execCrm(backend, useMock, {
-        method: "GET",
-        pathname: `/Api/R3/Project/${id}`,
-      });
+      return execCrm(
+        backend,
+        useMock,
+        {
+          method: "GET",
+          pathname: `/Api/R3/Project/${id}`,
+        },
+        "projekt_lekeres"
+      );
     }
   );
 
@@ -187,11 +238,16 @@ export function registerCrmTools(
       inputSchema: { mezok: mezokSchema },
     },
     async ({ mezok }) => {
-      return execCrm(backend, useMock, {
-        method: "PUT",
-        pathname: "/Api/R3/Project",
-        body: mezok,
-      });
+      return execCrm(
+        backend,
+        useMock,
+        {
+          method: "PUT",
+          pathname: "/Api/R3/Project",
+          body: mezok,
+        },
+        "projekt_letrehozas"
+      );
     }
   );
 
@@ -207,11 +263,16 @@ export function registerCrmTools(
     },
     async ({ projekt_id, statusz_id }) => {
       const id = coerceRecordId(projekt_id);
-      return execCrm(backend, useMock, {
-        method: "PUT",
-        pathname: `/Api/R3/Project/${id}`,
-        body: { StatusId: normalizeStatusIdForBody(statusz_id) },
-      });
+      return execCrm(
+        backend,
+        useMock,
+        {
+          method: "PUT",
+          pathname: `/Api/R3/Project/${id}`,
+          body: { StatusId: normalizeStatusIdForBody(statusz_id) },
+        },
+        "projekt_statusz_valtas"
+      );
     }
   );
 
@@ -223,11 +284,16 @@ export function registerCrmTools(
       inputSchema: { mezok: mezokSchema },
     },
     async ({ mezok }) => {
-      return execCrm(backend, useMock, {
-        method: "POST",
-        pathname: "/Api/R3/ToDo/",
-        body: mezok,
-      });
+      return execCrm(
+        backend,
+        useMock,
+        {
+          method: "POST",
+          pathname: "/Api/R3/ToDo/",
+          body: mezok,
+        },
+        "teendo_letrehozas"
+      );
     }
   );
 
@@ -242,10 +308,15 @@ export function registerCrmTools(
     },
     async ({ card_id }) => {
       const id = coerceRecordId(card_id);
-      return execCrm(backend, useMock, {
-        method: "GET",
-        pathname: `/Api/R3/ToDoList/${id}`,
-      });
+      return execCrm(
+        backend,
+        useMock,
+        {
+          method: "GET",
+          pathname: `/Api/R3/ToDoList/${id}`,
+        },
+        "teendo_lekeres"
+      );
     }
   );
 
@@ -272,11 +343,16 @@ export function registerCrmTools(
         UpdatedSince: args.frissitve,
         StatusGroup: args.status_csoport,
       });
-      return execCrm(backend, useMock, {
-        method: "GET",
-        pathname: "/Api/Invoice/List",
-        search,
-      });
+      return execCrm(
+        backend,
+        useMock,
+        {
+          method: "GET",
+          pathname: "/Api/Invoice/List",
+          search,
+        },
+        "szamla_lekerdezes"
+      );
     }
   );
 
@@ -295,40 +371,65 @@ export function registerCrmTools(
     },
     async ({ sema_tipus }) => {
       const typePath = sema_tipus.replace(/^\/+/, "");
-      const cat = await backend.request({
+      const reqCat: MinicrmRequest = {
         method: "GET",
         pathname: "/Api/R3/Category",
-      });
+      };
+      const tCat = Date.now();
+      const cat = await backend.request(reqCat);
+      if (shouldLogToolInvocation(useMock)) {
+        logToolInvocation({
+          ts: new Date().toISOString(),
+          tool: "schema_lekerdezes",
+          ms: Date.now() - tCat,
+          status: cat.status,
+          path: reqCat.pathname,
+        });
+      }
+      const schemaPath = `/Api/R3/Schema/${typePath}`;
+      const tSch = Date.now();
       const sch = await backend.request({
         method: "GET",
-        pathname: `/Api/R3/Schema/${typePath}`,
+        pathname: schemaPath,
       });
+      if (shouldLogToolInvocation(useMock)) {
+        logToolInvocation({
+          ts: new Date().toISOString(),
+          tool: "schema_lekerdezes",
+          ms: Date.now() - tSch,
+          status: sch.status,
+          path: schemaPath,
+        });
+      }
       const catBody = parseBodyJson(cat);
       const schBody = parseBodyJson(sch);
       const prefix = useMock ? "[Mock] " : "";
-      const ok = cat.status >= 200 && cat.status < 300 && sch.status >= 200 && sch.status < 300;
+      const catOk = cat.status >= 200 && cat.status < 300;
+      const schOk = sch.status >= 200 && sch.status < 300;
+      const ok = catOk && schOk;
       const combined = { Category: catBody, Schema: schBody };
       const text = prefix + JSON.stringify(combined, null, 2);
       if (!ok) {
+        const payload = useMock
+          ? {
+              categoryStatus: cat.status,
+              schemaStatus: sch.status,
+              Category: catBody,
+              Schema: schBody,
+            }
+          : {
+              uzenetHu: !catOk && !schOk
+                ? "A kategóriák és a séma lekérése is sikertelen volt."
+                : !catOk
+                  ? hungarianMessageForHttpStatus(cat.status)
+                  : hungarianMessageForHttpStatus(sch.status),
+              categoryHttp: cat.status,
+              schemaHttp: sch.status,
+              reszletek: { Category: catBody, Schema: schBody },
+            };
         return {
           isError: true,
-          content: [
-            {
-              type: "text",
-              text:
-                prefix +
-                JSON.stringify(
-                  {
-                    categoryStatus: cat.status,
-                    schemaStatus: sch.status,
-                    Category: catBody,
-                    Schema: schBody,
-                  },
-                  null,
-                  2
-                ),
-            },
-          ],
+          content: [{ type: "text", text: prefix + JSON.stringify(payload, null, 2) }],
         };
       }
       return { content: [{ type: "text", text }] };

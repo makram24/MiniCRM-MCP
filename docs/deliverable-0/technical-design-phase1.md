@@ -26,6 +26,10 @@ ASP Engeneering Test/
         search-params.ts    # GET query string (unit tested)
         ids.ts              # path id coercion (unit tested)
         project-status.ts   # StatusId-only body helper (unit tested)
+        errors.ts           # HTTP → Hungarian `uzenetHu` (Phase 2)
+        empty-results.ts    # “Nincs találat” append on list responses
+        concurrency-gate.ts # parallel HTTPS cap (live)
+        log.ts              # stderr JSON tool / timing / status
         *.test.ts           # excluded from tsc emit; run via npm test
     fixtures/               # mock JSON (nem tenant-specifikus)
     scripts/smoke-api.mjs   # GET smoke, SMOKE_SAVE, DEBUG_SMOKE
@@ -52,23 +56,24 @@ Secrets: only in `.env`; `.gitignore` covers `.env`. **Never** log key or raw PI
 
 - **Allowed:** `console.error` for fatal startup (e.g. missing credentials in live mode).
 - **MCP:** JSON-RPC on **stdio** — no debug `console.log` to stdout in production use.
-- **Future (Phase 2):** optional structured log on stderr: tool name, HTTP status, duration; still no full API key or full bodies without policy.
+- **Phase 2 (live default):** one JSON line per HTTP call on **stderr**: `tool`, `ms`, `status`, `path` (`minicrm/log.ts`). Mock: off unless `MINICRM_LOG_TOOLS=1`; disable live logs with `MINICRM_LOG_TOOLS=0`.
+- **Debug:** `MINICRM_DEBUG_HTTP=true` — truncated response preview on stderr (no secrets).
 
 ---
 
 ## 4. Rate limiting (implemented for live mode)
 
 - **Mechanism:** sliding window in `minicrm-mcp-server/src/minicrm/rate-limiter.ts` — max N calls per rolling 60s (`N` = `MINICRM_RATE_LIMIT_PER_MINUTE`, default **60** per Integrations Manual).
-- **Scope:** applied in `RealMinicrmBackend` before each HTTPS request; **mock mode** does not consume quota.
-- **429:** *TBD after live observation* — retry with backoff + jitter; max retries to be decided (Phase 2 hardening).
+- **Scope:** applied in `RealMinicrmBackend` on **each** HTTP attempt (including **429** retries); **mock mode** does not use the real client.
+- **429:** exponential backoff + jitter (cap 30s), up to **`MINICRM_MAX_429_RETRIES`** (default **3**) after the first response — see `real-backend.ts`.
 - **Invoice:** manual notes separate limits for invoice endpoints — *confirm counting strategy when pilot hits invoice-heavy flows*.
 
 ---
 
 ## 5. Burst / concurrency
 
-- Current implementation: **sequential** `await` per tool call; one outbound request per handler except `schema_lekerdezes` (**2** GETs: Category + Schema).
-- **Max parallel outbound:** *TBD* if Claude chains many tools; consider global limiter already caps average rate.
+- **`ConcurrencyGate`** (`minicrm/concurrency-gate.ts`): max **`MINICRM_MAX_CONCURRENT`** parallel HTTPS calls (default **4**) around each raw request in live mode.
+- Per MCP tool, handlers are still mostly one call; `schema_lekerdezes` issues two sequential calls (each passes through limiter + gate).
 
 ---
 
