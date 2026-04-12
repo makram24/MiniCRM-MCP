@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "minicrm": {
+      "command": "node",
+      "args": [
+        "C:/wamp64/www/ASP/ASP Engeneering Test/minicrm-mcp-server/dist/index.js"
+      ],
+      "env": {
+        "MINICRM_USE_MOCK": "true",
+        "MINICRM_SYSTEM_ID": "",
+        "MINICRM_API_KEY": "",
+        "MINICRM_BASE_URL": "https://r3.minicrm.hu"
+      }
+    }
+  }
+}

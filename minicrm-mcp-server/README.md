@@ -54,6 +54,11 @@ Copy `.env.example` to `.env`.
 - **Live:** `MINICRM_USE_MOCK=false`, plus `MINICRM_SYSTEM_ID`, `MINICRM_API_KEY`, optional `MINICRM_BASE_URL`.
 - **Phase 2 (live):** `MINICRM_MAX_CONCURRENT`, `MINICRM_MAX_429_RETRIES`, optional `MINICRM_DEBUG_HTTP`, `MINICRM_LOG_TOOLS` — see `.env.example`.
 
+## Claude Desktop (Phase 3 prep)
+
+- Repo: `docs/deliverable-0/CLAUDE-DESKTOP-SETUP.md` and `docs/claude_desktop_config.example.json`
+- Optional Windows launcher (correct working directory for `.env`): `scripts/start-mcp-for-desktop.cmd`
+
 ## Related documentation
 
 - **`MOCK-AND-LIVE-REST.md`** — before REST access (mock), switching env, after go-live checks

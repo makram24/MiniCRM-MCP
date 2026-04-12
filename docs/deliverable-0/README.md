@@ -12,6 +12,8 @@ Assemble **Deliverable 0** for milestone **M1** per `docs/Teszt-Projekt-MCP.md` 
 
 **Track B2 (dev prep):** `PHASE-02-PREP-TRACK-B.md` + `minicrm-mcp-server` → `npm test` (query params, id coercion, status-only body).
 
+**Track B3 (Phase 3 prep):** `CLAUDE-DESKTOP-SETUP.md`, `system-prompt-OUTLINE.md`, `PILOT-SCENARIOS-CHECKLIST.md`; sample `../claude_desktop_config.example.json`; `minicrm-mcp-server/scripts/start-mcp-for-desktop.cmd`.
+
 | File | Action |
 |------|--------|
 | `crm-structure-map.md` | Fill from UI: modules (CategoryId), statuses, custom fields, Hungarian glossary |

@@ -15,7 +15,8 @@ import { createMinicrmBackend } from "./minicrm/factory.js";
 import { registerCrmTools } from "./register-crm-tools.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+// dotenv 17+ logs "◇ injected env…" to stdout unless quiet — MCP stdio must be JSON-RPC only.
+dotenv.config({ path: path.resolve(__dirname, "../.env"), quiet: true });
 
 const cfg = loadMinicrmConfig();
 validateConfigForStartup(cfg);

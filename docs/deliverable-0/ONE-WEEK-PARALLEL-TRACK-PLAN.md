@@ -116,9 +116,9 @@ Per **Phase 2** runbook themes (tests, ergonomics) — **mock only**, no claim o
 
 From **`Phase-03-Claude-Desktop-Integration-and-Pilot.md`**:
 
-- [ ] Draft **`claude_desktop_config.json`** snippet pointing at `npm run start` / `node dist/index.js` (paths for **your** machine).  
-- [ ] Outline **system prompt** sections: CRM modules, approval before writes, ambiguous contact handling — fill placeholders until `crm-structure-map.md` is real.  
-- [ ] List **pilot scenarios** from scope (`Teszt-Projekt-MCP.md` use-case table) as a checkbox list for later.
+- [x] Draft **`claude_desktop_config.json`** snippet — `docs/claude_desktop_config.example.json` + `docs/deliverable-0/CLAUDE-DESKTOP-SETUP.md` + optional `scripts/start-mcp-for-desktop.cmd`.  
+- [x] Outline **system prompt** sections — `docs/deliverable-0/system-prompt-OUTLINE.md` (placeholders until `crm-structure-map.md` is real).  
+- [x] **Pilot scenarios** checklist — `docs/deliverable-0/PILOT-SCENARIOS-CHECKLIST.md` (scope table + slots for 10–15).
 
 ### B4 — Communication buffer (protects the week)
 
