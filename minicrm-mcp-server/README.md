@@ -32,6 +32,12 @@ Unit tests (no API key):
 npm test
 ```
 
+Exercise all **12 tool paths** on **mock fixtures** (no Claude, no network):
+
+```bash
+npm run smoke:tools:mock
+```
+
 API smoke script (real credentials only):
 
 ```bash

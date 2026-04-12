@@ -107,7 +107,7 @@ Optional automation: **`SMOKE_SAVE=1`** on smoke script to populate part of `api
 
 Per **Phase 2** runbook themes (tests, ergonomics) — **mock only**, no claim of M1 completion.
 
-- [ ] `MINICRM_USE_MOCK=true`: exercise **all 12 tools** end-to-end from Claude Desktop or MCP client; note bugs in tool descriptions or param names (`minicrm-mcp-server/src/register-crm-tools.ts`).  
+- [x] Exercise **all 12 tool** HTTP paths on mock backend: `npm run smoke:tools:mock` (see `scripts/smoke-tools-mock.ts`). *Optional:* repeat via Claude Desktop for UX copy review.  
 - [x] Align `fixtures/*.json` with **Integrations Manual** examples if any handler path mismatches — *baseline fixtures already aligned; revisit after live samples*.  
 - [x] Unit tests for query-string builders / `projekt_statusz_valtas` body shape — `npm test` (`search-params`, `ids`, `project-status`).  
 - [x] Review **Phase-02** checklist — see `docs/deliverable-0/PHASE-02-PREP-TRACK-B.md`.

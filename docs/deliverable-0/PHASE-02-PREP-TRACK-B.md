@@ -18,7 +18,7 @@
 | 12 tools | Step 5–6 | **Done (handlers)** | `register-crm-tools.ts`; align with **frozen** contracts after M1 |
 | `projekt_statusz_valtas` | Step 7.d | **Done** | Body only `{ StatusId }`; covered by `project-status.test.ts` |
 | Unit tests | Step / §1 | **Started** | `npm test` — `search-params`, `ids`, `project-status` |
-| Integration / smoke | — | **Partial** | `scripts/smoke-api.mjs` (GET); MCP mock exercise = manual / Desktop |
+| Integration / smoke | — | **Partial** | `scripts/smoke-api.mjs` (GET); `npm run smoke:tools:mock` (12 paths on fixtures); Claude Desktop = optional UX pass |
 
 ---
 
