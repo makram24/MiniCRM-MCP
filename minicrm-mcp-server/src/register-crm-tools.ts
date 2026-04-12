@@ -2,20 +2,14 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 
+import { coerceRecordId } from "./minicrm/ids.js";
+import { normalizeStatusIdForBody } from "./minicrm/project-status.js";
+import { buildSearchParamsString } from "./minicrm/search-params.js";
 import type { MinicrmBackend, MinicrmRequest } from "./minicrm/types.js";
 
 const mezokSchema = z
   .record(z.string(), z.unknown())
   .describe("Mezőnév → érték (miniCRM API JSON szerint).");
-
-function buildSearch(params: Record<string, string | undefined>): string {
-  const u = new URLSearchParams();
-  for (const [k, v] of Object.entries(params)) {
-    if (v === undefined || v === "") continue;
-    u.set(k, v);
-  }
-  return u.toString();
-}
 
 function parseBodyJson(res: { status: number; bodyText: string }): unknown {
   const t = res.bodyText.trim();
@@ -69,7 +63,7 @@ export function registerCrmTools(
       },
     },
     async ({ nev, email, telefon }) => {
-      const search = buildSearch({
+      const search = buildSearchParamsString({
         Name: nev,
         Email: email,
         Phone: telefon,
@@ -91,7 +85,7 @@ export function registerCrmTools(
       },
     },
     async ({ kontakt_id }) => {
-      const id = String(kontakt_id).replace(/\D/g, "") || String(kontakt_id);
+      const id = coerceRecordId(kontakt_id);
       return execCrm(backend, useMock, {
         method: "GET",
         pathname: `/Api/R3/Contact/${id}`,
@@ -126,7 +120,7 @@ export function registerCrmTools(
       },
     },
     async ({ kontakt_id, mezok }) => {
-      const id = String(kontakt_id).replace(/\D/g, "") || String(kontakt_id);
+      const id = coerceRecordId(kontakt_id);
       return execCrm(backend, useMock, {
         method: "PUT",
         pathname: `/Api/R3/Contact/${id}`,
@@ -150,7 +144,7 @@ export function registerCrmTools(
       },
     },
     async (args) => {
-      const search = buildSearch({
+      const search = buildSearchParamsString({
         CategoryId:
           args.kategoria_id !== undefined ? String(args.kategoria_id) : undefined,
         StatusId: args.statusz_id !== undefined ? String(args.statusz_id) : undefined,
@@ -177,7 +171,7 @@ export function registerCrmTools(
       },
     },
     async ({ projekt_id }) => {
-      const id = String(projekt_id).replace(/\D/g, "") || String(projekt_id);
+      const id = coerceRecordId(projekt_id);
       return execCrm(backend, useMock, {
         method: "GET",
         pathname: `/Api/R3/Project/${id}`,
@@ -212,17 +206,11 @@ export function registerCrmTools(
       },
     },
     async ({ projekt_id, statusz_id }) => {
-      const id = String(projekt_id).replace(/\D/g, "") || String(projekt_id);
-      const statusIdValue =
-        typeof statusz_id === "number"
-          ? statusz_id
-          : Number.isFinite(Number(statusz_id))
-            ? Number(statusz_id)
-            : statusz_id;
+      const id = coerceRecordId(projekt_id);
       return execCrm(backend, useMock, {
         method: "PUT",
         pathname: `/Api/R3/Project/${id}`,
-        body: { StatusId: statusIdValue },
+        body: { StatusId: normalizeStatusIdForBody(statusz_id) },
       });
     }
   );
@@ -253,7 +241,7 @@ export function registerCrmTools(
       },
     },
     async ({ card_id }) => {
-      const id = String(card_id).replace(/\D/g, "") || String(card_id);
+      const id = coerceRecordId(card_id);
       return execCrm(backend, useMock, {
         method: "GET",
         pathname: `/Api/R3/ToDoList/${id}`,
@@ -275,7 +263,7 @@ export function registerCrmTools(
       },
     },
     async (args) => {
-      const search = buildSearch({
+      const search = buildSearchParamsString({
         ProjectId:
           args.projekt_id !== undefined ? String(args.projekt_id) : undefined,
         ContactId:

@@ -14,6 +14,10 @@
 | **miniCRM** | `GET /Api/R3/Contact` |
 | **Művelet (scope)** | Keresés — Name, Email, Phone, szűrés névvel, e-maillel, telefonnal |
 
+### Felhasználó felé / MCP leírás (HU)
+
+Kontaktok keresése név, e-mail vagy telefon alapján; több találat esetén az asszisztens felsorolja az azonosítókat.
+
 ### Inputs
 
 *(TBD — list query params from manual + live tests)*
@@ -34,6 +38,10 @@
 |--|--|
 | **miniCRM** | `GET /Api/R3/Contact/{Id}` |
 | **Művelet (scope)** | Olvasás — Id → teljes adatlap |
+
+### Felhasználó felé / MCP leírás (HU)
+
+Egy kontakt teljes adatlapjának lekérése azonosító alapján (név, elérhetőségek, egyedi mezők).
 
 ### Inputs
 
@@ -56,6 +64,10 @@
 | **miniCRM** | `PUT /Api/R3/Contact` |
 | **Művelet (scope)** | Létrehozás — FirstName, LastName, Email, Phone, Type |
 
+### Felhasználó felé / MCP leírás (HU)
+
+Új személy vagy cég kontakt létrehozása a megadott mezőkkel; írási művelet — előtte erősítsd meg a felhasználóval.
+
 ### Inputs
 
 *(TBD)*
@@ -76,6 +88,10 @@
 |--|--|
 | **miniCRM** | `PUT /Api/R3/Contact/{Id}` |
 | **Művelet (scope)** | Módosítás — Id + bármely kontaktmező |
+
+### Felhasználó felé / MCP leírás (HU)
+
+Meglévő kontakt mezőinek frissítése; írási művelet — egyértelmű azonosító (Id) szükséges.
 
 ### Inputs
 
@@ -98,6 +114,10 @@
 | **miniCRM** | `GET /Api/R3/Project` |
 | **Művelet (scope)** | Keresés — CategoryId, StatusId, ContactId, UserId, Name |
 
+### Felhasználó felé / MCP leírás (HU)
+
+Projektek és ügyletek keresése szűrőkkel (modul/kategória, státusz, kapcsolódó kontakt, tulajdonos, név).
+
 ### Inputs
 
 *(TBD)*
@@ -118,6 +138,10 @@
 |--|--|
 | **miniCRM** | `GET /Api/R3/Project/{Id}` |
 | **Művelet (scope)** | Olvasás — Id → teljes projekt/ügylet |
+
+### Felhasználó felé / MCP leírás (HU)
+
+Egy projekt vagy ügylet részletes adatai: státusz, tulajdonos, kontakt, előzmények, egyedi mezők.
 
 ### Inputs
 
@@ -140,6 +164,10 @@
 | **miniCRM** | `PUT /Api/R3/Project` |
 | **Művelet (scope)** | Létrehozás — CategoryId, ContactId, Name, egyedi mezők |
 
+### Felhasználó felé / MCP leírás (HU)
+
+Új projekt vagy ügylet létrehozása; kötelező mezők a fiók szabályaitól függnek — írási művelet.
+
 ### Inputs
 
 *(TBD — required fields depend on module/status per manual)*
@@ -160,6 +188,10 @@
 |--|--|
 | **miniCRM** | `PUT /Api/R3/Project/{Id}` |
 | **Művelet (scope)** | Státuszváltás — **Id + StatusId only**; más mezőt nem módosít |
+
+### Felhasználó felé / MCP leírás (HU)
+
+Csak a projekt státuszát állítod át; más mező nem változik — írási művelet, jóváhagyással.
 
 ### Inputs
 
@@ -182,6 +214,10 @@
 | **miniCRM** | `POST /Api/R3/ToDo/` *(verify live — manual inconsistent)* |
 | **Művelet (scope)** | Létrehozás — ProjectId, UserId, Deadline, Type, Comment |
 
+### Felhasználó felé / MCP leírás (HU)
+
+Teendő (feladat) létrehozása egy projekthez kötve; írási művelet. Az élő HTTP metódust Phase-01 Step 4.8 rögzíti.
+
 ### Inputs
 
 *(TBD after Step 4.8 verification)*
@@ -202,6 +238,10 @@
 |--|--|
 | **miniCRM** | `GET /Api/R3/ToDoList/{CardId}` |
 | **Művelet (scope)** | Olvasás — CardId → teendőlista |
+
+### Felhasználó felé / MCP leírás (HU)
+
+Egy kártyához (általában projekt Id) tartozó teendők listája: határidő, státusz, felelős.
 
 ### Inputs
 
@@ -224,6 +264,10 @@
 | **miniCRM** | `GET /Api/Invoice` |
 | **Művelet (scope)** | Olvasás — ProjectId, ContactId → számlák |
 
+### Felhasználó felé / MCP leírás (HU)
+
+Kibocsátott számlák listája szűrőkkel (pl. projekt, kontakt, lapozás). A listázó végpont részleteit az Integrations Manual és az élő API egyezteti (`api-discrepancies.md`).
+
 ### Inputs
 
 *(TBD — align with Integrations Manual Invoice chapter + live)*
@@ -244,6 +288,10 @@
 |--|--|
 | **miniCRM** | `GET /Api/R3/Category` **és** `GET /Api/R3/Schema/{Type}` |
 | **Művelet (scope)** | Olvasás — modulok, kategóriák, státuszok, egyedi mezők |
+
+### Felhasználó felé / MCP leírás (HU)
+
+Elérhető modulok (kategóriák) és egy választott típushoz tartozó meződefiníciók / enumerációk lekérése — rendszer- és prompt-karbantartáshoz.
 
 ### Inputs
 

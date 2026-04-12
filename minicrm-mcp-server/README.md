@@ -26,6 +26,12 @@ Development (no separate build):
 npm run dev
 ```
 
+Unit tests (no API key):
+
+```bash
+npm test
+```
+
 API smoke script (real credentials only):
 
 ```bash

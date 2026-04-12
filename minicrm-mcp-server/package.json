@@ -8,6 +8,7 @@
     "dev": "tsx src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "test": "node --import tsx --test src/minicrm/search-params.test.ts src/minicrm/ids.test.ts src/minicrm/project-status.test.ts",
     "smoke:api": "node scripts/smoke-api.mjs"
   },
   "engines": {
