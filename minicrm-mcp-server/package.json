@@ -1,0 +1,27 @@
+{
+  "name": "minicrm-mcp-server",
+  "version": "0.1.0",
+  "description": "miniCRM MCP server — Phase 1 stub (toolchain only; 12 CRM tools in Phase 2 per scope)",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "smoke:api": "node scripts/smoke-api.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["mcp", "minicrm"],
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
