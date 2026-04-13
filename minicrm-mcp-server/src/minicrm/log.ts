@@ -4,6 +4,7 @@
 
 export type ToolLogLine = {
   ts: string;
+  reqId: string;
   tool: string;
   ms: number;
   status: number;

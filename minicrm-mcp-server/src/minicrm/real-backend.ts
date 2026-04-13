@@ -23,7 +23,7 @@ function sleep(ms: number): Promise<void> {
 }
 
 /** Phase-02 Step 4.4 — exponential backoff + jitter (cap 30s). */
-function backoffMs(attemptIndex: number): number {
+export function backoffMs(attemptIndex: number): number {
   const base = 500;
   const cap = 30_000;
   const exp = Math.min(cap, base * 2 ** attemptIndex);
@@ -36,7 +36,10 @@ export class RealMinicrmBackend implements MinicrmBackend {
   private readonly gate: ConcurrencyGate;
   private readonly authHeader: string;
 
-  constructor(private readonly cfg: MinicrmConfig) {
+  constructor(
+    private readonly cfg: MinicrmConfig,
+    private readonly sleepFn: (ms: number) => Promise<void> = sleep
+  ) {
     this.limiter = new RateLimiter(cfg.rateLimitPerMinute);
     this.gate = new ConcurrencyGate(cfg.maxConcurrentRequests);
     const token = Buffer.from(`${cfg.systemId}:${cfg.apiKey}`, "utf8").toString(
@@ -59,7 +62,7 @@ export class RealMinicrmBackend implements MinicrmBackend {
       if (last.status !== 429 || attempt >= this.cfg.max429Retries) {
         break;
       }
-      await sleep(backoffMs(attempt));
+      await this.sleepFn(backoffMs(attempt));
     }
 
     if (this.cfg.debugHttp && last.bodyText.length > 0) {
@@ -72,7 +75,7 @@ export class RealMinicrmBackend implements MinicrmBackend {
     return last;
   }
 
-  private rawHttps(req: MinicrmRequest): Promise<MinicrmResponse> {
+  protected rawHttps(req: MinicrmRequest): Promise<MinicrmResponse> {
     const u = fullUrl(this.cfg.baseUrl, req.pathname, req.search);
     const bodyStr =
       req.body !== undefined && req.body !== null
@@ -104,6 +107,13 @@ export class RealMinicrmBackend implements MinicrmBackend {
         });
       });
       clientReq.on("error", reject);
+      clientReq.setTimeout(this.cfg.requestTimeoutMs, () => {
+        clientReq.destroy(
+          new Error(
+            `miniCRM kérés timeout (${this.cfg.requestTimeoutMs} ms): ${req.method} ${req.pathname}`
+          )
+        );
+      });
       if (bodyStr !== undefined) clientReq.write(bodyStr);
       clientReq.end();
     });

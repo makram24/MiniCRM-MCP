@@ -18,6 +18,11 @@ type Case = {
   run: (b: MinicrmBackend) => Promise<void>;
 };
 
+type NegativeCase = {
+  label: string;
+  run: (b: MinicrmBackend) => Promise<void>;
+};
+
 const cfg = loadMinicrmConfig();
 const backend = createMinicrmBackend(cfg);
 
@@ -173,6 +178,52 @@ const cases: Case[] = [
   },
 ];
 
+const negativeCases: NegativeCase[] = [
+  {
+    label: "contact search forbidden (403)",
+    run: async (b) => {
+      const r = await b.request({
+        method: "GET",
+        pathname: "/Api/R3/Contact",
+        search: "Name=forbidden",
+      });
+      assertStatus(r, 403, "forbidden contact search");
+    },
+  },
+  {
+    label: "contact detail not found (404)",
+    run: async (b) => {
+      const r = await b.request({
+        method: "GET",
+        pathname: "/Api/R3/Contact/404",
+      });
+      assertStatus(r, 404, "missing contact detail");
+    },
+  },
+  {
+    label: "project pagination out-of-range (empty 200)",
+    run: async (b) => {
+      const r = await b.request({
+        method: "GET",
+        pathname: "/Api/R3/Project",
+        search: "Page=999",
+      });
+      assertOk(r, "empty project page");
+    },
+  },
+  {
+    label: "contact create validation error (400)",
+    run: async (b) => {
+      const r = await b.request({
+        method: "PUT",
+        pathname: "/Api/R3/Contact",
+        body: { ValidationFail: true },
+      });
+      assertStatus(r, 400, "contact create validation");
+    },
+  },
+];
+
 function assertOk(
   r: { status: number; bodyText: string },
   ctx: string
@@ -189,6 +240,18 @@ function assertJsonHasId(r: { bodyText: string }): void {
   }
 }
 
+function assertStatus(
+  r: { status: number; bodyText: string },
+  expected: number,
+  ctx: string
+): void {
+  if (r.status !== expected) {
+    throw new Error(
+      `${ctx}: expected HTTP ${expected}, got ${r.status} — ${r.bodyText.slice(0, 200)}`
+    );
+  }
+}
+
 let failed = 0;
 console.log("smoke-tools-mock: MockMinicrmBackend — 12 tool paths\n");
 
@@ -202,9 +265,20 @@ for (const c of cases) {
   }
 }
 
+for (const c of negativeCases) {
+  try {
+    await c.run(backend);
+    console.log(`OK  [negative] ${c.label}`);
+  } catch (e) {
+    failed++;
+    console.error(`FAIL [negative] ${c.label} — ${(e as Error).message}`);
+  }
+}
+
 console.log("");
 if (failed > 0) {
-  console.error(`Done: ${failed} failed, ${cases.length - failed} passed`);
+  const total = cases.length + negativeCases.length;
+  console.error(`Done: ${failed} failed, ${total - failed} passed`);
   process.exit(1);
 }
-console.log(`Done: ${cases.length} passed`);
+console.log(`Done: ${cases.length + negativeCases.length} passed`);

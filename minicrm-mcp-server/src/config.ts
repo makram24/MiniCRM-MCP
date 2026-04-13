@@ -1,4 +1,5 @@
 import path from "node:path";
+import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -15,6 +16,8 @@ export type MinicrmConfig = {
   max429Retries: number;
   /** Phase-02 Step 5.3 — log truncated response bodies on stderr. */
   debugHttp: boolean;
+  /** Per-request HTTPS timeout in milliseconds (live mode). */
+  requestTimeoutMs: number;
   /** Absolute path to `fixtures/` (for mock mode). */
   fixturesDir: string;
 };
@@ -53,6 +56,12 @@ function readEnv(): MinicrmConfig {
 
   const debugHttp = truthyEnv(process.env.MINICRM_DEBUG_HTTP);
 
+  const timeoutRaw = process.env.MINICRM_REQUEST_TIMEOUT_MS;
+  const requestTimeoutMs =
+    timeoutRaw !== undefined && timeoutRaw !== ""
+      ? Math.max(1_000, parseInt(timeoutRaw, 10) || 15_000)
+      : 15_000;
+
   const fixturesDir = path.resolve(__dirname, "../fixtures");
 
   return {
@@ -64,6 +73,7 @@ function readEnv(): MinicrmConfig {
     maxConcurrentRequests,
     max429Retries,
     debugHttp,
+    requestTimeoutMs,
     fixturesDir,
   };
 }
@@ -77,6 +87,19 @@ export function validateConfigForStartup(cfg: MinicrmConfig): void {
     console.error(
       "miniCRM: éles módhoz MINICRM_SYSTEM_ID és MINICRM_API_KEY kötelező (.env), " +
         "vagy állítsd MINICRM_USE_MOCK=true-ra a fejlesztői fixtúrákhoz."
+    );
+    process.exit(1);
+  }
+  if (!cfg.baseUrl.startsWith("https://")) {
+    console.error("miniCRM: MINICRM_BASE_URL csak https:// URL lehet.");
+    process.exit(1);
+  }
+  if (!cfg.useMock) {
+    return;
+  }
+  if (!fs.existsSync(cfg.fixturesDir)) {
+    console.error(
+      `miniCRM: mock módhoz hiányzik a fixtures könyvtár: ${cfg.fixturesDir}`
     );
     process.exit(1);
   }

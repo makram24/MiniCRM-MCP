@@ -7,7 +7,9 @@
 
 | # | Endpoint / area | Manual says | Live behaviour | Impact on tools |
 |---|-----------------|-------------|----------------|-----------------|
-| — | *példa: ToDo create* | POST `/Api/R3/ToDo/` (scope); manualban ellentmondás | *TBD élő teszt után* | `teendo_letrehozas` |
+| 1 | ToDo create method | POST `/Api/R3/ToDo/` (scope); manualban lehet eltérés | **TBD élő teszt** - ha tenantban PUT működik, adapterben csak a metódus vált | `teendo_letrehozas` |
 | | | | | |
-| | *Invoice list* | `GET /Api/Invoice/List` (manual listázás) | *TBD* | `szamla_lekerdezes` (implementáció: List endpoint) |
+| 2 | Invoice list endpoint | `GET /Api/Invoice/List` (manual listázás) | **TBD élő teszt** - fallback: `/Api/Invoice` olvasás támogatott mockban | `szamla_lekerdezes` |
+| | | | | |
+| 3 | Error payload shape | Manual példák vegyes mezőneveket mutatnak | **Pre-live baseline:** egységes MCP hiba burkoló (`code/httpStatus/messageHu/technicalDetail`) | összes író/olvasó tool |
 | | | | | |

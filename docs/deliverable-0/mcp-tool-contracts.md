@@ -5,6 +5,19 @@
 
 **Scope:** No DELETE / purge tools.
 
+## Contract freeze metadata (pre-live)
+
+- Contract baseline version: `v0.9-prelive`
+- Freeze date: `2026-04-13`
+- Unknown-field policy: tool schemas accept only defined top-level arguments; custom write payload remains under `mezok`.
+- Standardized live error envelope:
+  - `code` (machine-friendly string)
+  - `httpStatus` (number)
+  - `messageHu` (human-readable Hungarian message)
+  - `technicalDetail` (optional; debug/truncated)
+
+Update this metadata to `v1.0` after real API samples are attached for every tool family.
+
 ---
 
 ## 1. `kontakt_kereses`

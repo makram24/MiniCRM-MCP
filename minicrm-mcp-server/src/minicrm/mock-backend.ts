@@ -8,6 +8,10 @@ function normPath(pathname: string): string {
   return p;
 }
 
+function q(search?: string): URLSearchParams {
+  return new URLSearchParams(search || "");
+}
+
 export class MockMinicrmBackend implements MinicrmBackend {
   constructor(private readonly fixturesDir: string) {}
 
@@ -19,39 +23,66 @@ export class MockMinicrmBackend implements MinicrmBackend {
   async request(req: MinicrmRequest): Promise<MinicrmResponse> {
     const method = req.method;
     const p = normPath(req.pathname);
+    const body = req.body as Record<string, unknown> | undefined;
 
     if (method === "GET" && p === "/Api/R3/Category") {
       return { status: 200, bodyText: this.load("category") };
     }
 
     if (method === "GET" && p === "/Api/R3/Contact") {
+      const query = q(req.search);
+      if (query.get("Name") === "empty") {
+        return { status: 200, bodyText: this.load("contact-search-empty") };
+      }
+      if (query.get("Name") === "forbidden") {
+        return { status: 403, bodyText: this.load("error-forbidden") };
+      }
       return { status: 200, bodyText: this.load("contact-search") };
     }
 
     const contactId = p.match(/^\/Api\/R3\/Contact\/(\d+)$/);
     if (method === "GET" && contactId) {
+      if (contactId[1] === "404") {
+        return { status: 404, bodyText: this.load("error-not-found") };
+      }
       return { status: 200, bodyText: this.load("contact-detail") };
     }
 
     if (method === "PUT" && p === "/Api/R3/Contact") {
+      if (body?.ValidationFail === true) {
+        return { status: 400, bodyText: this.load("error-validation") };
+      }
       return { status: 200, bodyText: JSON.stringify({ Id: 99999 }) };
     }
 
     if (method === "PUT" && contactId) {
+      if (body?.ValidationFail === true) {
+        return { status: 400, bodyText: this.load("error-validation") };
+      }
       const id = Number(contactId[1]);
       return { status: 200, bodyText: JSON.stringify({ Id: id }) };
     }
 
     if (method === "GET" && p === "/Api/R3/Project") {
+      const query = q(req.search);
+      if (query.get("Page") === "999") {
+        return { status: 200, bodyText: this.load("project-list-empty") };
+      }
       return { status: 200, bodyText: this.load("project-list") };
     }
 
     const projectId = p.match(/^\/Api\/R3\/Project\/(\d+)$/);
     if (method === "GET" && projectId) {
+      if (projectId[1] === "404") {
+        return { status: 404, bodyText: this.load("error-not-found") };
+      }
       return { status: 200, bodyText: this.load("project-detail") };
     }
 
     if (method === "PUT" && p === "/Api/R3/Project") {
+      if (body?.ValidationFail === true) {
+        return { status: 400, bodyText: this.load("error-validation") };
+      }
       return { status: 200, bodyText: JSON.stringify({ Id: 88888 }) };
     }
 
@@ -61,11 +92,17 @@ export class MockMinicrmBackend implements MinicrmBackend {
     }
 
     if (method === "POST" && (p === "/Api/R3/ToDo" || p === "/Api/R3/ToDo/")) {
+      if (body?.ValidationFail === true) {
+        return { status: 400, bodyText: this.load("error-validation") };
+      }
       return { status: 200, bodyText: JSON.stringify({ Id: 1111 }) };
     }
 
     const todoList = p.match(/^\/Api\/R3\/ToDoList\/(\d+)$/);
     if (method === "GET" && todoList) {
+      if (todoList[1] === "0") {
+        return { status: 200, bodyText: this.load("todolist-empty") };
+      }
       return { status: 200, bodyText: this.load("todolist") };
     }
 
@@ -73,7 +110,18 @@ export class MockMinicrmBackend implements MinicrmBackend {
       method === "GET" &&
       (p === "/Api/Invoice" || p === "/Api/Invoice/List")
     ) {
+      const query = q(req.search);
+      if (query.get("Page") === "999") {
+        return { status: 200, bodyText: this.load("invoice-search-empty") };
+      }
+      if (query.get("StatusGroup") === "forbidden") {
+        return { status: 403, bodyText: this.load("error-forbidden") };
+      }
       return { status: 200, bodyText: this.load("invoice-search") };
+    }
+
+    if (method === "GET" && p === "/Api/R3/Schema/__fail__") {
+      return { status: 404, bodyText: this.load("error-not-found") };
     }
 
     if (method === "GET" && p.startsWith("/Api/R3/Schema/")) {
