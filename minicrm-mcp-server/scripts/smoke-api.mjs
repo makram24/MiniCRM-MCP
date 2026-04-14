@@ -23,13 +23,25 @@ const envPathCandidates = [
   path.join(process.cwd(), ".env"),
 ];
 
+function parseEnvValue(raw) {
+  let v = raw.trim();
+  const q = v[0];
+  if ((q === '"' || q === "'") && v.endsWith(q) && v.length >= 2) {
+    return v.slice(1, -1);
+  }
+  // Unquoted: strip trailing inline comment (`KEY=val # note`) like dotenv
+  const comment = v.search(/\s+#/);
+  if (comment !== -1) v = v.slice(0, comment).trim();
+  return v.replace(/^["']|["']$/g, "");
+}
+
 function loadEnv(filePath) {
   let txt = fs.readFileSync(filePath, "utf8");
   if (txt.charCodeAt(0) === 0xfeff) txt = txt.slice(1);
   const out = {};
   for (const line of txt.split(/\r?\n/)) {
     const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/);
-    if (m) out[m[1]] = m[2].trim().replace(/^["']|["']$/g, "");
+    if (m) out[m[1]] = parseEnvValue(m[2]);
   }
   return out;
 }
