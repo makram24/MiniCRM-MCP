@@ -66,7 +66,7 @@ describe("MockMinicrmBackend edge fixtures", () => {
     assert.equal(projectCreate.status, 400);
 
     const todoCreate = await backend.request({
-      method: "POST",
+      method: "PUT",
       pathname: "/Api/R3/ToDo/",
       body: { ValidationFail: true },
     });

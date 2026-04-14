@@ -58,7 +58,7 @@ When REST access is confirmed (SystemId + API key work in miniCRM / support):
 
 **Invoice listing note:** `szamla_lekerdezes` calls **`GET /Api/Invoice/List`** (Integrations Manual). If your tenant or docs differ, adjust the handler once you have a verified response.
 
-**ToDo create note:** Scope specifies **`POST /Api/R3/ToDo/`**. If live behaviour differs, align the real client after Phase 1 verification (see `docs/phases/Phase-02-MCP-Server-and-Twelve-Tools.md`).
+**ToDo create note:** Scope/manual often shows **`POST /Api/R3/ToDo/`**; **this tenant’s live API uses `PUT /Api/R3/ToDo/`** (POST →405). Evidence: `docs/deliverable-0/api-samples/08-todo-probe-*.json` and `api-test-log.md`. MCP tool `teendo_letrehozas` uses **PUT**.
 
 ---
 

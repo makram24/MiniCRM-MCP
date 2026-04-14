@@ -12,31 +12,31 @@ Status legend:
 ## Phase 1 - Discovery and Schema Mapping (M1)
 
 ### Access + live API proof
-- [ ] REST add-on and credentials confirmed (`SystemId`, REST API key)
-- [ ] Baseline live request (`GET /Api/R3/Category`) verified with 200
+- [x] REST add-on and credentials confirmed (`SystemId`, REST API key)
+- [x] Baseline live request (`GET /Api/R3/Category`) verified with 200
 
 ### Real sample collection (`docs/deliverable-0/api-samples/`)
-- [ ] Category sample saved
-- [ ] Schema sample(s) saved
-- [ ] Contact search/detail samples saved
-- [ ] Project search/detail samples saved
-- [ ] ToDo list sample saved
-- [ ] ToDo create method/body verified from real API
-- [ ] Invoice list sample saved and validated
+- [x] Category sample saved
+- [x] Schema sample(s) saved
+- [x] Contact search/detail samples saved
+- [x] Project search/detail samples saved
+- [x] ToDo list sample saved
+- [x] ToDo create method/body verified from real API
+- [x] Invoice list sample saved and validated
 
 ### Documentation and mapping artifacts
 - [x] `crm-structure-map.md` scaffold exists
-- [x] `api-test-log.md` scaffold exists
-- [x] `api-discrepancies.md` scaffold exists
+- [x] `api-test-log.md` filled from smoke + ToDo probe
+- [x] `api-discrepancies.md` updated from live samples
 - [x] `technical-design-phase1.md` draft exists
 - [x] `environment-notes.md` draft exists
-- [-] `mcp-tool-contracts.md` partly prepared (HU user-facing text present, live I/O details still to freeze)
+- [-] `mcp-tool-contracts.md` partly prepared (ToDo PUT + minták; többi tool I/O még bővíthető)
 
 ### M1 gate
 - [ ] Internal QA checklist fully green
 - [ ] M1 product owner sign-off completed
 
-Current Phase 1 state: **In progress** (strong prep done; live API evidence + sign-off still pending).
+Current Phase 1 state: **In progress** (élő minták + napló kész; M1 belső QA + PO sign-off hátra van).
 
 ---
 

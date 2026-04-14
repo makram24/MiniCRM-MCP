@@ -1,6 +1,7 @@
 /**
  * Phase 1 API smoke tests — reads ../.env (or minicrm-mcp-server/.env when run from repo root).
  * Does not print secrets. Saves JSON bodies under docs/deliverable-0/api-samples/ when SMOKE_SAVE=1.
+ * After contact search, saves GET /Api/R3/Contact/{Id} as 09-contact-detail.json when a hit exists.
  *
  * Usage (from minicrm-mcp-server):
  *   node scripts/smoke-api.mjs
@@ -70,6 +71,37 @@ function httpsGet(urlString, systemId, apiKey) {
   });
 }
 
+/** JSON body write (POST / PUT) — for ToDo method probe only. */
+function httpsJson(method, urlString, systemId, apiKey, bodyStr) {
+  return new Promise((resolve, reject) => {
+    const u = new URL(urlString);
+    const auth = Buffer.from(`${systemId}:${apiKey}`, "utf8").toString("base64");
+    const opts = {
+      hostname: u.hostname,
+      port: u.port || 443,
+      path: u.pathname + u.search,
+      method,
+      headers: {
+        Authorization: `Basic ${auth}`,
+        Accept: "application/json",
+        "Content-Type": "application/json; charset=utf-8",
+      },
+    };
+    const req = https.request(opts, (res) => {
+      let data = "";
+      res.on("data", (c) => {
+        data += c;
+      });
+      res.on("end", () => {
+        resolve({ status: res.statusCode ?? 0, body: data });
+      });
+    });
+    req.on("error", reject);
+    req.write(bodyStr);
+    req.end();
+  });
+}
+
 function firstCategoryId(categoryJson) {
   try {
     const o = JSON.parse(categoryJson);
@@ -80,9 +112,9 @@ function firstCategoryId(categoryJson) {
   }
 }
 
-function saveSample(name, body, status) {
+function saveSample(name, body, status, { allowNon2xx = false } = {}) {
   if (process.env.SMOKE_SAVE !== "1") return;
-  if (status < 200 || status >= 300) return;
+  if (!allowNon2xx && (status < 200 || status >= 300)) return;
   const outDir = path.resolve(root, "..", "docs", "deliverable-0", "api-samples");
   fs.mkdirSync(outDir, { recursive: true });
   const file = path.join(outDir, `${name}.json`);
@@ -165,9 +197,46 @@ async function main() {
     console.log("(skip 02–05: could not parse CategoryId from Category response)");
   }
 
-  await run("06-contact-search-name", `${base}/Api/R3/Contact?Name=a`);
+  const rContactSearch = await run(
+    "06-contact-search-name",
+    `${base}/Api/R3/Contact?Name=a`
+  );
+  let contactId = null;
+  try {
+    const cj = JSON.parse(rContactSearch.body);
+    const resultsObj = cj.Results || {};
+    const firstKey = Object.keys(resultsObj)[0];
+    if (firstKey && resultsObj[firstKey]?.Id != null) {
+      contactId = String(resultsObj[firstKey].Id);
+    }
+  } catch {
+    /* ignore */
+  }
+  if (contactId) {
+    await run("09-contact-detail", `${base}/Api/R3/Contact/${contactId}`);
+  } else {
+    console.log("(skip 09-contact-detail: no contact Id parsed from search)");
+  }
 
   await run("07-invoice-list", `${base}/Api/Invoice/List`);
+
+  /**
+   * ToDo method probe (Phase-01 Step 4.8): empty `{}` body should yield validation/error,
+   * not create a task. Compare POST vs PUT on the same path.
+   * PowerShell: `$env:SMOKE_PROBE_TODO="1"; $env:SMOKE_SAVE="1"; npm run smoke:api`
+   */
+  if (process.env.SMOKE_PROBE_TODO === "1") {
+    const todoUrl = `${base}/Api/R3/ToDo/`;
+    console.log("\n--- todo method probe (empty JSON body) ---\n");
+    for (const method of ["POST", "PUT"]) {
+      const { status, body } = await httpsJson(method, todoUrl, systemId, apiKey, "{}");
+      const name = `08-todo-probe-${method.toLowerCase()}`;
+      saveSample(name, body, status, { allowNon2xx: true });
+      let preview = body.slice(0, 200).replace(/\s+/g, " ");
+      if (body.length > 200) preview += "…";
+      console.log(`${status}\t${name}\t${preview || "(empty body)"}`);
+    }
+  }
 
   console.log("\n--- summary ---");
   for (const r of results) {

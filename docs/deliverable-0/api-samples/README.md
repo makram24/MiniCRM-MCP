@@ -10,6 +10,12 @@ From `minicrm-mcp-server/`:
 $env:SMOKE_SAVE="1"; npm run smoke:api
 ```
 
+ToDo **POST vs PUT** probe (Phase-01 Step 4.8): üres `{}` törzs, nem hoz létre rekordot; a válasz fájlokba menthetők:
+
+```powershell
+$env:SMOKE_SAVE="1"; $env:SMOKE_PROBE_TODO="1"; npm run smoke:api
+```
+
 Optional (prints base URL, **lengths** of id/key, and response headers — **no secrets**):
 
 ```powershell

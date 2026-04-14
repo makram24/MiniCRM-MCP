@@ -91,7 +91,10 @@ export class MockMinicrmBackend implements MinicrmBackend {
       return { status: 200, bodyText: JSON.stringify({ Id: id }) };
     }
 
-    if (method === "POST" && (p === "/Api/R3/ToDo" || p === "/Api/R3/ToDo/")) {
+    if (
+      (method === "POST" || method === "PUT") &&
+      (p === "/Api/R3/ToDo" || p === "/Api/R3/ToDo/")
+    ) {
       if (body?.ValidationFail === true) {
         return { status: 400, bodyText: this.load("error-validation") };
       }

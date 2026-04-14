@@ -125,10 +125,10 @@ const cases: Case[] = [
   },
   {
     tool: "teendo_letrehozas",
-    label: "POST ToDo create",
+    label: "PUT ToDo create",
     run: async (b) => {
       const r = await b.request({
-        method: "POST",
+        method: "PUT",
         pathname: "/Api/R3/ToDo/",
         body: {
           ProjectId: 1,

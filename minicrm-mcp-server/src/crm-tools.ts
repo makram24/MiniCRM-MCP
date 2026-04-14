@@ -337,7 +337,7 @@ const CRM_TOOL_DEFINITIONS: readonly CrmToolDef[] = [
   {
     name: "teendo_letrehozas",
     description:
-      "Teendő létrehozása (POST /Api/R3/ToDo/). Mezők: ProjectId, UserId, Deadline, Type, Comment (Integrations Manual szerint).",
+      "Teendő létrehozása (PUT /Api/R3/ToDo/). Mezők: ProjectId, UserId, Deadline, Type, Comment — élő API: PUT; POST ezen a tenanton 405.",
     inputSchema: teendoLetrehozasSchema,
     async execute(args, ctx) {
       const { mezok } = teendoLetrehozasSchema.parse(args);
@@ -345,7 +345,7 @@ const CRM_TOOL_DEFINITIONS: readonly CrmToolDef[] = [
       return execCrm(
         ctx.backend,
         ctx.useMock,
-        { method: "POST", pathname: "/Api/R3/ToDo/", body: mezok },
+        { method: "PUT", pathname: "/Api/R3/ToDo/", body: mezok },
         "teendo_letrehozas",
         reqId
       );

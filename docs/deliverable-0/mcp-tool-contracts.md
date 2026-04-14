@@ -224,16 +224,16 @@ Csak a projekt státuszát állítod át; más mező nem változik — írási m
 
 | | |
 |--|--|
-| **miniCRM** | `POST /Api/R3/ToDo/` *(verify live — manual inconsistent)* |
+| **miniCRM** | **`PUT /Api/R3/ToDo/`** (élő tenant, 2026-04-13 — POST → 405; lásd `api-samples/08-todo-probe-*.json`) |
 | **Művelet (scope)** | Létrehozás — ProjectId, UserId, Deadline, Type, Comment |
 
 ### Felhasználó felé / MCP leírás (HU)
 
-Teendő (feladat) létrehozása egy projekthez kötve; írási művelet. Az élő HTTP metódust Phase-01 Step 4.8 rögzíti.
+Teendő (feladat) létrehozása egy projekthez kötve; írási művelet. Az MCP szerver **PUT**-ot használ ennél a tenantnál.
 
 ### Inputs
 
-*(TBD after Step 4.8 verification)*
+`mezok` — ugyanaz, mint a miniCRM ToDo JSON (ProjectId, UserId, Comment, …); pontos kötelező mezők modulonként: `api-samples/` + séma.
 
 ### Outputs
 

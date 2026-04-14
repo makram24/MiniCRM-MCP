@@ -20,7 +20,7 @@ Error envelope baseline (live mode):
 | `projekt_lekeres` | `GET /Api/R3/Project/{Id}` | `Id` | object with project fields + `Id` | Map unknown field names without breaking core keys (`Id`, `StatusId`, `ContactId`) |
 | `projekt_letrehozas` | `PUT /Api/R3/Project` | `mezok` object | object with created `Id` | If validation error payload differs, wrap into standardized error envelope |
 | `projekt_statusz_valtas` | `PUT /Api/R3/Project/{Id}` | `Id`, `StatusId` only | object with `Id` | If API accepts extra fields, still send only `StatusId` from MCP |
-| `teendo_letrehozas` | `POST /Api/R3/ToDo/` (verify live) | `ProjectId`, `UserId`, `Comment` (plus optional fields) | object with created `Id` | If POST fails and PUT works in tenant, toggle method only after evidence log |
+| `teendo_letrehozas` | **`PUT /Api/R3/ToDo/`** (verified live 2026-04-13; POST → 405) | `ProjectId`, `UserId`, `Comment` (plus optional fields) | object with created `Id` | If another tenant requires POST, branch on discovery — default is PUT per `api-test-log.md` |
 | `teendo_lekeres` | `GET /Api/R3/ToDoList/{CardId}` | `CardId` | `Count`, `Results` list | If result key differs, normalize to list in `Results` |
 | `szamla_lekerdezes` | `GET /Api/Invoice/List` (or `/Api/Invoice`) | optional filters (`ProjectId`, `ContactId`, `Page`, `UpdatedSince`, `StatusGroup`) | `Count`, `Results` | If endpoint differs, keep tool contract stable and remap adapter only |
 | `schema_lekerdezes` | `GET /Api/R3/Category` + `GET /Api/R3/Schema/{Type}` | `Type` (`Business`, `Person`, `Project/{CategoryId}`) | `{ Category, Schema }` | If either call fails, return combined error with both statuses |
