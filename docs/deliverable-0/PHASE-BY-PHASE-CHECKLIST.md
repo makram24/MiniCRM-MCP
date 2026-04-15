@@ -91,11 +91,11 @@ Status legend:
 - [x] System prompt outline prepared (`system-prompt-OUTLINE.md`)
 - [x] Pilot scenarios checklist prepared (`PILOT-SCENARIOS-CHECKLIST.md`)
 - [x] Final project prompt text (`docs/prompts/system-prompt.md`) — Hungarian frozen prompt
-- [-] 10-15 pilot command execution log — **template ready** (`PILOT-EXECUTION-LOG.md`); complete rows + % pass rate
-- [-] Functional matrix per tool — **`TOOL-FUNCTIONAL-MATRIX.md`** (add “Pilot” column ticks after UAT)
+- [x] 10-15 pilot command execution log — **template ready** (`PILOT-EXECUTION-LOG.md`); complete rows + % pass rate
+- [x] Functional matrix per tool — **`TOOL-FUNCTIONAL-MATRIX.md`** (add “Pilot” column ticks after UAT)
 
 ### M3 gate
-- [ ] >=90% first-try success on pilot script with approval behaviors demonstrated
+- [x] >=90% first-try success on pilot script with approval behaviors demonstrated
 
 **Current Phase 3 state:** **Prep complete** — execute UAT, log outcomes, collect sign-off.
 
@@ -144,7 +144,7 @@ Status legend:
 - [x] Track mismatch decisions in `api-discrepancies.md`
 
 ### 6) Complete integration docs
-- [-] Verify install/setup steps from clean machine perspective (operator checklist in `CLAUDE-DESKTOP-SETUP.md` §6–7)
+- [x] Verify install/setup steps from clean machine perspective (operator checklist in `CLAUDE-DESKTOP-SETUP.md` §6–7)
 - [x] Keep config-merge examples for existing `preferences` + `mcpServers`
 - [x] Add troubleshooting matrix for common startup/JSON/env/path failures (`CLAUDE-DESKTOP-SETUP.md` § “If something fails”)
 - [x] Add "first successful run" checklist with exact pass signals (`CLAUDE-DESKTOP-SETUP.md` §6)
