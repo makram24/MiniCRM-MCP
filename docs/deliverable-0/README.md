@@ -2,32 +2,36 @@
 
 Assemble **Deliverable 0** for milestone **M1** per `docs/Teszt-Projekt-MCP.md` and `docs/phases/Phase-01-Discovery-and-Schema-Mapping.md`.
 
-**Checklist of open Phase 1 work:** `PHASE-1-REMAINING.md`  
-**What to show the product owner for M1 sign-off:** `M1-PRODUCT-OWNER-SIGNOFF.md`  
-**One-week parallel plan (Track A: REST/client, Track B: offline):** `ONE-WEEK-PARALLEL-TRACK-PLAN.md`
+**Master checklist:** `PHASE-BY-PHASE-CHECKLIST.md`  
+**What to show the product owner for M1 sign-off:** `M1-PRODUCT-OWNER-SIGNOFF.md` + `PHASE-SIGNOFF-EVIDENCE-TEMPLATE.md`  
+**One-week parallel plan:** `ONE-WEEK-PARALLEL-TRACK-PLAN.md`  
+**Engineering QA (internal):** `INTERNAL-QA-CHECKLIST.md`  
+**Stakeholder summary (1 page):** `EXECUTIVE-SUMMARY-M1.md`
 
-## What to fill in (you / stakeholder)
+## Frozen artefacts (2026-04-13)
 
-**Track B1 started:** `crm-structure-map.md`, `api-test-log.md`, `api-discrepancies.md`, `technical-design-phase1.md`, and `environment-notes.md` exist as **drafts** (structure + placeholders). `mcp-tool-contracts.md` includes **HU** “Felhasználó felé” lines; **Inputs/Outputs/Errors** stay TBD until live `api-samples/`.
-
-**Track B2 (dev prep):** `PHASE-02-PREP-TRACK-B.md` + `minicrm-mcp-server` → `npm test` (query params, id coercion, status-only body).
-
-**Track B3 (Phase 3 prep):** `CLAUDE-DESKTOP-SETUP.md`, `system-prompt-OUTLINE.md`, `PILOT-SCENARIOS-CHECKLIST.md`; sample `../claude_desktop_config.example.json`; `minicrm-mcp-server/scripts/start-mcp-for-desktop.cmd`.
-
-| File | Action |
+| File | Status |
 |------|--------|
-| `crm-structure-map.md` | Fill from UI: modules (CategoryId), statuses, custom fields, Hungarian glossary |
-| `api-samples/` | Create folder; save raw JSON from each smoke test (see Phase-01 Step 4) |
-| `api-test-log.md` | One row per request: URL, method, status, sample file name |
-| `api-discrepancies.md` | Differences vs `docs/MiniCRM-Integrations-Manual.md` |
-| `mcp-tool-contracts.md` | Complete **Inputs / Outputs / Errors** for all 12 tools from real JSON |
-| `technical-design-phase1.md` | Rate limiter design, logging rules, repo layout |
-| `environment-notes.md` | Node, curl, Claude Desktop version, date |
+| `mcp-tool-contracts.md` | **v1.0-live** — all 12 tools, Inputs/Outputs/Errors |
+| `crm-structure-map.md` | Pilot tenant snapshot — **replace** CategoryId tables if client tenant differs |
+| `api-samples/` + `api-test-log.md` | Evidence library + request log |
+| `api-discrepancies.md` | Live vs manual (ToDo PUT, list/detail types, …) |
+| `UAT-SCRIPT-8-10-PROMPTS.md` | Tenant-safe prompts (no hard-coded `Project/3` for live) |
+| `PILOT-EXECUTION-LOG.md` | **Fill** during formal pilot (pass %, approver) |
+| `TOOL-FUNCTIONAL-MATRIX.md` | Maps tools → UT / smoke / pilot evidence |
+| `LIVE-429-VERIFICATION.md` | Unit-test evidence for 429 backoff; live flood optional |
+| `docs/prompts/system-prompt.md` | Hungarian Claude Project prompt (frozen) |
+
+## Still human-driven
+
+- **M1 / M2 / M3 sign-off** rows in `PHASE-SIGNOFF-EVIDENCE-TEMPLATE.md`
+- **`environment-notes.md`**, **`technical-design-phase1.md`**: confirm PO/engineering reviewed for your org
+- **Clean-machine verification** (optional): follow `CLAUDE-DESKTOP-SETUP.md` §6–7 on a fresh PC
 
 ## Code artefact
 
-- Git commit / tag of `minicrm-mcp-server/` **Phase 1 stub** (toolchain only).
+- `minicrm-mcp-server/` — run `npm run build`, `npm test`, `npm run smoke:api` (live) / `smoke:tools:mock` (offline)
 
 ## Gate M1
 
-Do **not** start Phase 2 implementation until the client approves this package (**sign-off**).
+Per process: obtain **product owner approval** on Deliverable 0 before treating M1 as formally closed — see `M1-PRODUCT-OWNER-SIGNOFF.md` §5.

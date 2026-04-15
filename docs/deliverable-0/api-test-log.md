@@ -15,6 +15,7 @@
 | 8 | 2026-04-13 | GET | /Api/Invoice/List | 200 | `07-invoice-list.json` | `Count:0`, `Results:[]` — üres lista, de 200 |
 | 9 | 2026-04-13 | POST | /Api/R3/ToDo/ | 405 | `08-todo-probe-post.json` | Nem engedélyezett — üres `{}` probe (opcionális: `SMOKE_PROBE_TODO=1`) |
 | 10 | 2026-04-13 | PUT | /Api/R3/ToDo/ | 400 | `08-todo-probe-put.json` | Metódus elfogadva; üres body → validációs hiba (várt) |
+| 11 | 2026-04-13 | (simulated) | HTTP wrapper — **429** retry | n/a | `minicrm-mcp-server/src/minicrm/real-backend.test.ts` | Élő 429 kényszerítés opcionális; lásd `LIVE-429-VERIFICATION.md` |
 
 ---
 

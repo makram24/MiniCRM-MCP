@@ -86,4 +86,4 @@ If `kontakt_kereses` returns **two or more** plausible matches:
 ## Maintenance
 
 - **Source of truth** for day-to-day use: text inside the **Claude Project** UI.  
-- **Git copy:** after M3, save the final prompt to e.g. `docs/prompts/system-prompt.md` per Phase-03 Step 6.3 (create that path when you freeze the prompt).
+- **Git copy:** frozen Hungarian prompt: `docs/prompts/system-prompt.md` (Phase-03 Step 6.3). Keep the Claude Project UI text in sync when you change tenant rules.

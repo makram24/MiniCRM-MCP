@@ -2,11 +2,10 @@
 
 Purpose: freeze the expected API wiring per tool before live REST access, so go-live is adapter verification, not redesign.
 
-Error envelope baseline (live mode):
-- `code` (string, short machine code)
+Error envelope baseline (live mode — `buildHttpErrorPayload`):
+- `uzenetHu` (string, user-facing Hungarian summary)
 - `httpStatus` (number)
-- `messageHu` (string, user-facing)
-- `technicalDetail` (optional, debug-only/truncated)
+- `reszletek` (optional; parsed body or `{ nyersValasz }` when non-JSON)
 
 ## Tool mapping table
 

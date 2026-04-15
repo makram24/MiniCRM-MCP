@@ -1,22 +1,20 @@
-# MCP tool contracts — 12 tools (Phase 1 baseline)
+# MCP tool contracts — 12 tools (frozen baseline)
 
-**Source of endpoint mapping:** `docs/Teszt-Projekt-MCP.md` → “Module mapping and tool map”.  
-**Rule:** Fill **Inputs**, **Outputs**, and **Errors** only after real responses exist in `api-samples/` (Phase-01 Step 6). Do not invent field shapes.
-
+**Source of endpoint mapping:** `docs/Teszt-Projekt-MCP.md` + `docs/deliverable-0/API-MAPPING-PACK.md`.  
+**Evidence:** `docs/deliverable-0/api-samples/`, `api-test-log.md`, `api-discrepancies.md`.  
 **Scope:** No DELETE / purge tools.
 
-## Contract freeze metadata (pre-live)
+## Contract freeze metadata
 
-- Contract baseline version: `v0.9-prelive`
-- Freeze date: `2026-04-13`
-- Unknown-field policy: tool schemas accept only defined top-level arguments; custom write payload remains under `mezok`.
-- Standardized live error envelope:
-  - `code` (machine-friendly string)
-  - `httpStatus` (number)
-  - `messageHu` (human-readable Hungarian message)
-  - `technicalDetail` (optional; debug/truncated)
-
-Update this metadata to `v1.0` after real API samples are attached for every tool family.
+- **Version:** `v1.0-live`
+- **Freeze date:** `2026-04-13`
+- **Unknown-field policy:** MCP Zod schemas accept only the documented top-level keys per tool. For writes, arbitrary miniCRM field names live under **`mezok`** (JSON object) and must match the REST API for that entity.
+- **Standard live error envelope** (`execCrm` failures — `minicrm/errors.ts`):
+  - `uzenetHu` — Hungarian summary
+  - `httpStatus` — HTTP status number
+  - `reszletek` — parsed JSON body when JSON; otherwise wrapper with `nyersValasz` text
+- **Input validation error** (Zod `safeParse` failure): plain text starting with `Input validation error:` (not JSON).
+- **Pagination:** Project / Contact search uses API `Page`; **first page = `0`** (second page = `1`, …).
 
 ---
 
@@ -25,23 +23,27 @@ Update this metadata to `v1.0` after real API samples are attached for every too
 | | |
 |--|--|
 | **miniCRM** | `GET /Api/R3/Contact` |
-| **Művelet (scope)** | Keresés — Name, Email, Phone, szűrés névvel, e-maillel, telefonnal |
+| **Scope** | Search contacts by name, email, or phone. |
 
-### Felhasználó felé / MCP leírás (HU)
+### Inputs (MCP → maps to query string)
 
-Kontaktok keresése név, e-mail vagy telefon alapján; több találat esetén az asszisztens felsorolja az azonosítókat.
+| MCP param | API query | Required |
+|-----------|-----------|----------|
+| `nev` | `Name` | no |
+| `email` | `Email` | no |
+| `telefon` | `Phone` | no |
 
-### Inputs
+At least one filter should be provided for useful results (not enforced by server — empty filters may return large sets).
 
-*(TBD — list query params from manual + live tests)*
+### Outputs (success)
 
-### Outputs
-
-*(TBD — shape of `Count` / `Results` / pagination)*
+JSON object per miniCRM: typically **`Count`** (number), **`Results`** (object keyed by string Id → contact summary with `Id`, `Name`, `Url`, `Email`, `Phone`, `Type`, …). Optional note appended by MCP when list is empty (`Count === 0`).
 
 ### Errors
 
-*(TBD — map HTTP codes to Hungarian messages)*
+| HTTP | Meaning |
+|------|---------|
+| 400 / 401 / 403 / 404 / 429 / 5xx | Standard envelope (`uzenetHu`, `httpStatus`, `reszletek`). |
 
 ---
 
@@ -50,23 +52,21 @@ Kontaktok keresése név, e-mail vagy telefon alapján; több találat esetén a
 | | |
 |--|--|
 | **miniCRM** | `GET /Api/R3/Contact/{Id}` |
-| **Művelet (scope)** | Olvasás — Id → teljes adatlap |
-
-### Felhasználó felé / MCP leírás (HU)
-
-Egy kontakt teljes adatlapjának lekérése azonosító alapján (név, elérhetőségek, egyedi mezők).
+| **Scope** | Full contact card by Id. |
 
 ### Inputs
 
-*(TBD)*
+| MCP param | Required | Notes |
+|-----------|----------|-------|
+| `kontakt_id` | yes | number or string; coerced to digits for path |
 
-### Outputs
+### Outputs (success)
 
-*(TBD)*
+JSON object: full contact fields (`FirstName`, `LastName`, `Email`, `Type`, custom keys, …) per tenant schema.
 
 ### Errors
 
-*(TBD)*
+404 if Id unknown; 401 auth; standard envelope otherwise.
 
 ---
 
@@ -75,23 +75,21 @@ Egy kontakt teljes adatlapjának lekérése azonosító alapján (név, elérhet
 | | |
 |--|--|
 | **miniCRM** | `PUT /Api/R3/Contact` |
-| **Művelet (scope)** | Létrehozás — FirstName, LastName, Email, Phone, Type |
-
-### Felhasználó felé / MCP leírás (HU)
-
-Új személy vagy cég kontakt létrehozása a megadott mezőkkel; írási művelet — előtte erősítsd meg a felhasználóval.
+| **Scope** | Create contact. **Write — confirm with user first.** |
 
 ### Inputs
 
-*(TBD)*
+| MCP param | Required | Notes |
+|-----------|----------|-------|
+| `mezok` | yes | JSON object sent as request body (e.g. `FirstName`, `LastName`, `Email`, `Phone`, `Type`: `Person` / `Business`, …) |
 
-### Outputs
+### Outputs (success)
 
-*(TBD)*
+Typically `{ "Id": <newId> }` (miniCRM convention).
 
 ### Errors
 
-*(TBD)*
+400 validation; 401; 500 on bad payload; standard envelope.
 
 ---
 
@@ -100,23 +98,22 @@ Egy kontakt teljes adatlapjának lekérése azonosító alapján (név, elérhet
 | | |
 |--|--|
 | **miniCRM** | `PUT /Api/R3/Contact/{Id}` |
-| **Művelet (scope)** | Módosítás — Id + bármely kontaktmező |
-
-### Felhasználó felé / MCP leírás (HU)
-
-Meglévő kontakt mezőinek frissítése; írási művelet — egyértelmű azonosító (Id) szükséges.
+| **Scope** | Partial/full update. **Write — confirm.** |
 
 ### Inputs
 
-*(TBD)*
+| MCP param | Required |
+|-----------|----------|
+| `kontakt_id` | yes |
+| `mezok` | yes — only fields to change |
 
-### Outputs
+### Outputs (success)
 
-*(TBD)*
+Often `{ "Id": <id> }` or echo of saved record per API.
 
 ### Errors
 
-*(TBD)*
+404; 400; standard envelope.
 
 ---
 
@@ -125,23 +122,26 @@ Meglévő kontakt mezőinek frissítése; írási művelet — egyértelmű azon
 | | |
 |--|--|
 | **miniCRM** | `GET /Api/R3/Project` |
-| **Művelet (scope)** | Keresés — CategoryId, StatusId, ContactId, UserId, Name |
-
-### Felhasználó felé / MCP leírás (HU)
-
-Projektek és ügyletek keresése szűrőkkel (modul/kategória, státusz, kapcsolódó kontakt, tulajdonos, név).
+| **Scope** | Search projects/deals. |
 
 ### Inputs
 
-*(TBD)*
+| MCP param | API query | Required |
+|-----------|-----------|----------|
+| `kategoria_id` | `CategoryId` | no |
+| `statusz_id` | `StatusId` | no |
+| `kontakt_id` | `ContactId` | no |
+| `felhasznalo_id` | `UserId` | no |
+| `nev` | `Name` | no |
+| `oldal` | `Page` | no (default API behaviour if omitted) |
 
-### Outputs
+### Outputs (success)
 
-*(TBD)*
+`Count`, `Results` (object keyed by Id). **Note:** In list responses `StatusId` / `UserId` are often **numeric**; in **detail** (`projekt_lekeres`) the same logical fields may appear as **human-readable strings** — see `api-discrepancies.md`.
 
 ### Errors
 
-*(TBD)*
+Standard HTTP envelope.
 
 ---
 
@@ -150,23 +150,21 @@ Projektek és ügyletek keresése szűrőkkel (modul/kategória, státusz, kapcs
 | | |
 |--|--|
 | **miniCRM** | `GET /Api/R3/Project/{Id}` |
-| **Művelet (scope)** | Olvasás — Id → teljes projekt/ügylet |
-
-### Felhasználó felé / MCP leírás (HU)
-
-Egy projekt vagy ügylet részletes adatai: státusz, tulajdonos, kontakt, előzmények, egyedi mezők.
+| **Scope** | Single project detail. |
 
 ### Inputs
 
-*(TBD)*
+| MCP param | Required |
+|-----------|----------|
+| `projekt_id` | yes |
 
-### Outputs
+### Outputs (success)
 
-*(TBD)*
+Full project JSON (includes `CategoryId`, `ContactId`, `StatusId` as labels or numbers per tenant, custom fields).
 
 ### Errors
 
-*(TBD)*
+404; standard envelope.
 
 ---
 
@@ -175,23 +173,21 @@ Egy projekt vagy ügylet részletes adatai: státusz, tulajdonos, kontakt, előz
 | | |
 |--|--|
 | **miniCRM** | `PUT /Api/R3/Project` |
-| **Művelet (scope)** | Létrehozás — CategoryId, ContactId, Name, egyedi mezők |
-
-### Felhasználó felé / MCP leírás (HU)
-
-Új projekt vagy ügylet létrehozása; kötelező mezők a fiók szabályaitól függnek — írási művelet.
+| **Scope** | Create project. **Write — confirm.** |
 
 ### Inputs
 
-*(TBD — required fields depend on module/status per manual)*
+| MCP param | Required | Notes |
+|-----------|----------|-------|
+| `mezok` | yes | Must include at least **`CategoryId`** and **`ContactId`** for new cards (miniCRM rule); optional `Name`, `StatusId`, custom fields per schema |
 
-### Outputs
+### Outputs (success)
 
-*(TBD)*
+Typically `{ "Id": <newId> }`.
 
 ### Errors
 
-*(TBD)*
+400 missing mandatory fields; standard envelope.
 
 ---
 
@@ -200,23 +196,22 @@ Egy projekt vagy ügylet részletes adatai: státusz, tulajdonos, kontakt, előz
 | | |
 |--|--|
 | **miniCRM** | `PUT /Api/R3/Project/{Id}` |
-| **Művelet (scope)** | Státuszváltás — **Id + StatusId only**; más mezőt nem módosít |
-
-### Felhasználó felé / MCP leírás (HU)
-
-Csak a projekt státuszát állítod át; más mező nem változik — írási művelet, jóváhagyással.
+| **Scope** | **Status change only** — request body is **`{ "StatusId": … }`** alone. **Write — confirm.** |
 
 ### Inputs
 
-*(TBD — enforce StatusId-only body in Phase 2)*
+| MCP param | Required | Notes |
+|-----------|----------|-------|
+| `projekt_id` | yes | |
+| `statusz_id` | yes | Sent as `StatusId` in JSON; numeric strings coerced to number when safe (`normalizeStatusIdForBody`) |
 
-### Outputs
+### Outputs (success)
 
-*(TBD)*
+Often `{ "Id": <id> }`.
 
 ### Errors
 
-*(TBD)*
+400/404/500; standard envelope.
 
 ---
 
@@ -224,24 +219,26 @@ Csak a projekt státuszát állítod át; más mező nem változik — írási m
 
 | | |
 |--|--|
-| **miniCRM** | **`PUT /Api/R3/ToDo/`** (élő tenant, 2026-04-13 — POST → 405; lásd `api-samples/08-todo-probe-*.json`) |
-| **Művelet (scope)** | Létrehozás — ProjectId, UserId, Deadline, Type, Comment |
+| **miniCRM** | **`PUT /Api/R3/ToDo/`** |
+| **Scope** | Create todo on a card. **Write — confirm.** |
 
-### Felhasználó felé / MCP leírás (HU)
+### Tenant note (verified 2026-04-13)
 
-Teendő (feladat) létrehozása egy projekthez kötve; írási művelet. Az MCP szerver **PUT**-ot használ ennél a tenantnál.
+**POST** to `/Api/R3/ToDo/` → **405**. **PUT** to `/Api/R3/ToDo/` is the working method for this tenant. Samples: `api-samples/08-todo-probe-*.json`.
 
 ### Inputs
 
-`mezok` — ugyanaz, mint a miniCRM ToDo JSON (ProjectId, UserId, Comment, …); pontos kötelező mezők modulonként: `api-samples/` + séma.
+| MCP param | Required |
+|-----------|----------|
+| `mezok` | yes | e.g. `ProjectId`, `UserId`, `Deadline`, `Type`, `Comment` — exact required fields depend on module/schema |
 
-### Outputs
+### Outputs (success)
 
-*(TBD)*
+New Id or confirmation JSON per API.
 
 ### Errors
 
-*(TBD)*
+400 on invalid/empty body; 405 if method wrong; standard envelope.
 
 ---
 
@@ -250,23 +247,21 @@ Teendő (feladat) létrehozása egy projekthez kötve; írási művelet. Az MCP 
 | | |
 |--|--|
 | **miniCRM** | `GET /Api/R3/ToDoList/{CardId}` |
-| **Művelet (scope)** | Olvasás — CardId → teendőlista |
-
-### Felhasználó felé / MCP leírás (HU)
-
-Egy kártyához (általában projekt Id) tartozó teendők listája: határidő, státusz, felelős.
+| **Scope** | Todos for a project/card. |
 
 ### Inputs
 
-*(TBD)*
+| MCP param | Required | Notes |
+|-----------|----------|-------|
+| `card_id` | yes | Usually **project Id** |
 
-### Outputs
+### Outputs (success)
 
-*(TBD)*
+`Count` and `Results` (array or object per API version — see samples `05-todolist.json`).
 
 ### Errors
 
-*(TBD)*
+404/401; standard envelope.
 
 ---
 
@@ -274,24 +269,26 @@ Egy kártyához (általában projekt Id) tartozó teendők listája: határidő,
 
 | | |
 |--|--|
-| **miniCRM** | `GET /Api/Invoice` |
-| **Művelet (scope)** | Olvasás — ProjectId, ContactId → számlák |
-
-### Felhasználó felé / MCP leírás (HU)
-
-Kibocsátott számlák listája szűrőkkel (pl. projekt, kontakt, lapozás). A listázó végpont részleteit az Integrations Manual és az élő API egyezteti (`api-discrepancies.md`).
+| **miniCRM** | `GET /Api/Invoice/List` |
+| **Scope** | Issued invoices list. |
 
 ### Inputs
 
-*(TBD — align with Integrations Manual Invoice chapter + live)*
+| MCP param | API query | Required |
+|-----------|-----------|----------|
+| `projekt_id` | `ProjectId` | no |
+| `kontakt_id` | `ContactId` | no |
+| `oldal` | `Page` | no |
+| `frissitve` | `UpdatedSince` | no |
+| `status_csoport` | `StatusGroup` | no |
 
-### Outputs
+### Outputs (success)
 
-*(TBD)*
+`Count`, `Results` (may be empty array — still **200**). Sample: `07-invoice-list.json`.
 
 ### Errors
 
-*(TBD)*
+Standard envelope.
 
 ---
 
@@ -299,21 +296,45 @@ Kibocsátott számlák listája szűrőkkel (pl. projekt, kontakt, lapozás). A 
 
 | | |
 |--|--|
-| **miniCRM** | `GET /Api/R3/Category` **és** `GET /Api/R3/Schema/{Type}` |
-| **Művelet (scope)** | Olvasás — modulok, kategóriák, státuszok, egyedi mezők |
-
-### Felhasználó felé / MCP leírás (HU)
-
-Elérhető modulok (kategóriák) és egy választott típushoz tartozó meződefiníciók / enumerációk lekérése — rendszer- és prompt-karbantartáshoz.
+| **miniCRM** | `GET /Api/R3/Category` then `GET /Api/R3/Schema/{Type}` |
+| **Scope** | Categories map + schema for one type path. |
 
 ### Inputs
 
-*(TBD — Type = Business \| Person \| Project/{CategoryId} per manual)*
+| MCP param | Required | Notes |
+|-----------|----------|-------|
+| `sema_tipus` | yes | Path segment **after** `/Api/R3/Schema/` — e.g. `Business`, `Person`, **`Project/{CategoryId}`**. **`CategoryId` must exist in your tenant** (from `Category` keys). Docs often show `Project/3` as an example; **your** ids come from `GET /Api/R3/Category` (e.g. `23`, `38`, …). |
 
-### Outputs
+### Outputs (success)
 
-*(TBD — how combined result is returned to Claude)*
+Single JSON object:
 
-### Errors
+```json
+{
+  "Category": { "<id>": "<module name>", "..." : "..." },
+  "Schema": { "<field>": "<type or enum map>", "...": "..." }
+}
+```
 
-*(TBD)*
+Prefix **`[Mock] `** when `MINICRM_USE_MOCK=true`.
+
+### Errors (partial success)
+
+Unlike other tools, **one call performs two HTTP requests**. If either fails, MCP returns **`isError: true`** with a structured payload:
+
+**Live mode:**
+
+- `uzenetHu` — Hungarian summary (which leg failed)
+- `categoryHttp` — status of Category request
+- `schemaHttp` — status of Schema request
+- `reszletek` — `{ Category: <body>, Schema: <body> }` (parsed JSON or fallback)
+
+**Mock mode:** `categoryStatus`, `schemaStatus`, `Category`, `Schema`.
+
+Common user mistake: **`Project/3`** when `3` is not a category → often **schema 500** with plain-text `Schema.nyersValasz` explaining unknown product code — use a real **`CategoryId`** from the `Category` object.
+
+---
+
+## Change control
+
+After `v1.0-live`, any behaviour or field contract change should update this file **and** `api-discrepancies.md` (if tenant/manual drift), then bump version (`v1.1-…`).

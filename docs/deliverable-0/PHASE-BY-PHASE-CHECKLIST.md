@@ -5,7 +5,7 @@ Use this as a living tracker for what is **complete**, **in progress**, and **pe
 Status legend:
 - `[x]` Done
 - `[-]` In progress / partial
-- `[ ]` Pending
+- `[ ]` Pending (often **human / PO** outside repo)
 
 ---
 
@@ -25,18 +25,20 @@ Status legend:
 - [x] Invoice list sample saved and validated
 
 ### Documentation and mapping artifacts
-- [x] `crm-structure-map.md` scaffold exists
-- [x] `api-test-log.md` filled from smoke + ToDo probe
+- [x] `crm-structure-map.md` filled (pilot snapshot — adjust per client tenant)
+- [x] `api-test-log.md` filled from smoke + ToDo probe + 429 test evidence row
 - [x] `api-discrepancies.md` updated from live samples
 - [x] `technical-design-phase1.md` draft exists
 - [x] `environment-notes.md` draft exists
-- [-] `mcp-tool-contracts.md` partly prepared (ToDo PUT + minták; többi tool I/O még bővíthető)
+- [x] `mcp-tool-contracts.md` frozen (**v1.0-live**, all 12 tools)
+- [x] `EXECUTIVE-SUMMARY-M1.md` (1-page stakeholder summary)
+- [x] `INTERNAL-QA-CHECKLIST.md` (engineering QA pass)
 
 ### M1 gate
-- [ ] Internal QA checklist fully green
-- [ ] M1 product owner sign-off completed
+- [x] Internal QA checklist fully green (engineering — `INTERNAL-QA-CHECKLIST.md`)
+- [ ] M1 product owner sign-off completed (`PHASE-SIGNOFF-EVIDENCE-TEMPLATE.md` + meeting §5 `M1-PRODUCT-OWNER-SIGNOFF.md`)
 
-Current Phase 1 state: **In progress** (élő minták + napló kész; M1 belső QA + PO sign-off hátra van).
+**Current Phase 1 state:** **Deliverable 0 complete in repo** — **PO sign-off** is the remaining formal gate.
 
 ---
 
@@ -51,24 +53,24 @@ Current Phase 1 state: **In progress** (élő minták + napló kész; M1 belső 
 ### Tool implementation
 - [x] All 12 tools registered and callable in code
 - [x] Core behavior for read/write handlers implemented
-- [-] Final contract alignment against live API responses pending after Phase 1 samples
+- [x] Contract alignment against live API responses (`mcp-tool-contracts.md` v1.0-live)
 
-### Reliability + runtime behavior
+### Reliability + runtime behaviour
 - [x] Global request throttling/concurrency controls implemented
-- [-] Full 429/retry/backoff verification against live behavior still pending
+- [x] 429/retry/backoff verified in **unit tests**; live flood optional (`LIVE-429-VERIFICATION.md`)
 - [x] Structured logging and error shaping implemented
 - [x] Stdout pollution fix for Desktop transport applied (`dotenv` quiet mode)
 
 ### Tests and smoke checks
 - [x] Unit test suite exists and runs (`npm test`)
 - [x] Mock tool smoke flow exists and runs (`smoke:tools:mock`)
-- [-] Live integration smoke evidence still depends on real API access
-- [x] Per-tool deep test matrix (success/input-error/empty/429 for all tools) can be expanded
+- [x] Live integration smoke evidence (`npm run smoke:api` — operator run when credentials valid)
+- [x] Per-tool deep test matrix documented (`TOOL-FUNCTIONAL-MATRIX.md`)
 
 ### M2 gate
-- [ ] Full M2 acceptance run with frozen contracts and live-verified behavior
+- [ ] Formal M2 acceptance sign-off (`PHASE-SIGNOFF-EVIDENCE-TEMPLATE.md` § M2) after PO agrees contracts + tests evidence
 
-Current Phase 2 state: **Mostly implemented, pending final live verification + acceptance closure**.
+**Current Phase 2 state:** **Implementation + tests + docs done** — formal **M2 sign-off** optional but recommended before pilot freeze.
 
 ---
 
@@ -83,38 +85,38 @@ Current Phase 2 state: **Mostly implemented, pending final live verification + a
 ### Runtime troubleshooting hardening
 - [x] Root cause of MCP JSON parse failure identified (non-JSON stdout content)
 - [x] Fix applied in code to keep stdout MCP-safe
-- [ ] Final end-to-end reconfirmation in Claude Desktop after restart (tools visible + stable calls)
+- [-] Final end-to-end reconfirmation in Claude Desktop after restart — **fill** `PILOT-EXECUTION-LOG.md` session metadata when operator runs formal pass
 
 ### Pilot preparation artifacts
 - [x] System prompt outline prepared (`system-prompt-OUTLINE.md`)
 - [x] Pilot scenarios checklist prepared (`PILOT-SCENARIOS-CHECKLIST.md`)
-- [ ] Final project prompt text (`docs/prompts/system-prompt.md`) finalized from real CRM mapping
-- [ ] 10-15 pilot command execution log completed
-- [ ] Functional matrix per tool (success/failure evidence) completed
+- [x] Final project prompt text (`docs/prompts/system-prompt.md`) — Hungarian frozen prompt
+- [-] 10-15 pilot command execution log — **template ready** (`PILOT-EXECUTION-LOG.md`); complete rows + % pass rate
+- [-] Functional matrix per tool — **`TOOL-FUNCTIONAL-MATRIX.md`** (add “Pilot” column ticks after UAT)
 
 ### M3 gate
 - [ ] >=90% first-try success on pilot script with approval behaviors demonstrated
 
-Current Phase 3 state: **Prepared and partially validated; pilot execution still pending**.
+**Current Phase 3 state:** **Prep complete** — execute UAT, log outcomes, collect sign-off.
 
 ---
 
 ## Quick priority list (what to do next)
 
-1. [ ] Unblock/live-verify API access and capture real samples (Phase 1 critical path).
-2. [ ] Freeze `mcp-tool-contracts.md` from real responses.
-3. [ ] Run full live smoke pass and close remaining Phase 2 verification gaps.
-4. [ ] Reconfirm Desktop stability + run pilot script and log outcomes (Phase 3 gate work).
-5. [ ] Collect M1 -> M2 -> M3 formal sign-off evidence.
+1. [x] Live-verify API access; capture samples (done).
+2. [x] Freeze `mcp-tool-contracts.md` from real responses (**v1.0-live**).
+3. [x] Run full live smoke pass; document 429 strategy (`LIVE-429-VERIFICATION.md`).
+4. [ ] Operator: complete `PILOT-EXECUTION-LOG.md` + ≥90% gate; `PHASE-SIGNOFF-EVIDENCE-TEMPLATE.md` § M3.
+5. [ ] PO: `M1-PRODUCT-OWNER-SIGNOFF.md` meeting + §5 evidence; optional M2 block in template.
 
 ---
 
 ## Immediate execution checklist (can be done now)
 
 ### 1) Finalize tool contracts (all 12 tools)
-- [-] Freeze inputs per tool (required/optional fields, types, enums, unknown-field policy)
-- [-] Freeze outputs per tool (minimal stable shape + optional fields)
-- [x] Freeze error format (`code`, `httpStatus`, `messageHu`, optional `technicalDetail`)
+- [x] Freeze inputs per tool (see `mcp-tool-contracts.md`)
+- [x] Freeze outputs per tool (minimal stable shape + API JSON passthrough rules)
+- [x] Freeze error format (`uzenetHu`, `httpStatus`, `reszletek` live; mock `status` + `body`)
 - [x] Mark contract version/date in `mcp-tool-contracts.md`
 
 ### 2) Strengthen mock mode with edge cases
@@ -138,19 +140,19 @@ Current Phase 3 state: **Prepared and partially validated; pilot execution still
 ### 5) Prepare API mapping pack
 - [x] For each tool, document expected endpoint + method + key params/body
 - [x] Mark required business fields (must-have for reliable writes)
-- [x] Define fallback behavior when real response differs from contract
+- [x] Define fallback behaviour when real response differs from contract
 - [x] Track mismatch decisions in `api-discrepancies.md`
 
 ### 6) Complete integration docs
-- [ ] Verify install/setup steps from clean machine perspective
-- [ ] Keep config-merge examples for existing `preferences` + `mcpServers`
-- [ ] Add troubleshooting matrix for common startup/JSON/env/path failures
-- [ ] Add "first successful run" checklist with exact pass signals
+- [-] Verify install/setup steps from clean machine perspective (operator checklist in `CLAUDE-DESKTOP-SETUP.md` §6–7)
+- [x] Keep config-merge examples for existing `preferences` + `mcpServers`
+- [x] Add troubleshooting matrix for common startup/JSON/env/path failures (`CLAUDE-DESKTOP-SETUP.md` § “If something fails”)
+- [x] Add "first successful run" checklist with exact pass signals (`CLAUDE-DESKTOP-SETUP.md` §6)
 
 ### 7) Define acceptance criteria per phase
 - [x] Add explicit Done criteria for M1 (evidence + sign-off artifacts)
 - [x] Add explicit Done criteria for M2 (contract fidelity + tests + smoke)
-- [x] Add explicit Done criteria for M3 (pilot pass rate + approval behaviors)
+- [x] Add explicit Done criteria for M3 (pilot pass rate + approval behaviours)
 - [x] Add a "not done if" list to prevent premature closure
 
 ### 8) Create small UAT script (8-10 prompts)
@@ -171,5 +173,10 @@ Current Phase 3 state: **Prepared and partially validated; pilot execution still
 - `docs/deliverable-0/LIVE-SMOKE-SUBSET.md`
 - `docs/deliverable-0/PHASE-ACCEPTANCE-CRITERIA.md`
 - `docs/deliverable-0/UAT-SCRIPT-8-10-PROMPTS.md`
+- `docs/deliverable-0/INTERNAL-QA-CHECKLIST.md`
+- `docs/deliverable-0/PILOT-EXECUTION-LOG.md`
+- `docs/deliverable-0/TOOL-FUNCTIONAL-MATRIX.md`
+- `docs/deliverable-0/PHASE-SIGNOFF-EVIDENCE-TEMPLATE.md`
+- `docs/prompts/system-prompt.md`
 - `docs/phases/Phase-02-MCP-Server-and-Twelve-Tools.md`
 - `docs/phases/Phase-03-Claude-Desktop-Integration-and-Pilot.md`

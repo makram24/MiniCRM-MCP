@@ -27,7 +27,7 @@ Done when all are true:
 
 Not done if any are true:
 - Tool behavior changed without contract update.
-- 429/timeout behavior undefined.
+- 429/timeout behavior undefined (see `LIVE-429-VERIFICATION.md` + `real-backend` unit tests for acceptable evidence).
 - Known failures are only tracked verbally.
 
 ## M3 - Claude Desktop pilot complete

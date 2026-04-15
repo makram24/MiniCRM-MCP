@@ -132,7 +132,7 @@ const schemaLekerdezesSchema = z.object({
   sema_tipus: z
     .string()
     .describe(
-      'Schema útvonal a Category után, pl. "Business", "Person", "Project/3"'
+      'Schema path after /Api/R3/Schema/, e.g. "Business", "Person", "Project/{CategoryId}" where CategoryId exists in GET /Api/R3/Category (not necessarily 3)'
     ),
 });
 

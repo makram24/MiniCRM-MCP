@@ -32,15 +32,17 @@ Complete your **internal** checklist (Phase-01 Step 11) *before* this meeting. U
 
 Tick when ready to share (print, PDF bundle, or shared folder).
 
-- [ ] **Executive summary** (1 page): what you learned, main risks, open points  
-- [ ] **`crm-structure-map.md`**  
-- [ ] **`api-samples/`** + **`api-test-log.md`**  
-- [ ] **`api-discrepancies.md`**  
-- [ ] **`mcp-tool-contracts.md`** (all **12** tools)  
-- [ ] **`technical-design-phase1.md`**  
-- [ ] **`environment-notes.md`**  
-- [ ] **ToDo create**: documented **working HTTP method** (POST vs PUT) for **this** tenant — not guessed  
-- [ ] **Evidence** that critical endpoints have **2xx samples** or a **written blocker** and plan  
+- [x] **Executive summary** (1 page): what you learned, main risks, open points — `EXECUTIVE-SUMMARY-M1.md`  
+- [x] **`crm-structure-map.md`** (pilot snapshot — replace ids if client tenant differs)  
+- [x] **`api-samples/`** + **`api-test-log.md`**  
+- [x] **`api-discrepancies.md`**  
+- [x] **`mcp-tool-contracts.md`** (all **12** tools — **v1.0-live**)  
+- [ ] **`technical-design-phase1.md`** (confirm PO reviewed engineering draft)  
+- [ ] **`environment-notes.md`** (confirm Node / Desktop versions filled for your org)  
+- [x] **ToDo create**: documented **working HTTP method** (**PUT**; POST → **405**) for pilot tenant  
+- [x] **Evidence** that critical endpoints have **2xx samples** — smoke + `api-samples/`  
+
+**Approver:** complete §5 in this file + `PHASE-SIGNOFF-EVIDENCE-TEMPLATE.md` when the PO meeting finishes.
 
 ---
 
