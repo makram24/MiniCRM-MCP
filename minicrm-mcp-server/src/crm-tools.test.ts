@@ -11,6 +11,7 @@ import {
   invokeCrmTool,
 } from "./crm-tools.js";
 import { MockMinicrmBackend } from "./minicrm/mock-backend.js";
+import type { MinicrmRequest, MinicrmResponse } from "./minicrm/types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const fixturesDir = path.resolve(__dirname, "../fixtures");
@@ -184,4 +185,39 @@ describe("CRM tools — per-tool matrix (mock backend)", () => {
       }
     });
   }
+});
+
+describe("contact Type normalization on write tools", () => {
+  class CaptureBackend {
+    public lastReq: MinicrmRequest | null = null;
+
+    async request(req: MinicrmRequest): Promise<MinicrmResponse> {
+      this.lastReq = req;
+      return { status: 200, bodyText: '{"Id":1}' };
+    }
+  }
+
+  it("maps Type=2 to Person on kontakt_letrehozas", async () => {
+    const backend = new CaptureBackend();
+    const ctx = { backend, useMock: false };
+    const r = await invokeCrmTool(
+      "kontakt_letrehozas",
+      { mezok: { FirstName: "Makram", LastName: "AlMoghrabi", Type: "2" } },
+      ctx
+    );
+    assert.equal(r.isError, undefined);
+    assert.equal((backend.lastReq?.body as Record<string, unknown>)?.Type, "Person");
+  });
+
+  it("maps Type=1 to Business on kontakt_modositas", async () => {
+    const backend = new CaptureBackend();
+    const ctx = { backend, useMock: false };
+    const r = await invokeCrmTool(
+      "kontakt_modositas",
+      { kontakt_id: 103, mezok: { Type: 1 } },
+      ctx
+    );
+    assert.equal(r.isError, undefined);
+    assert.equal((backend.lastReq?.body as Record<string, unknown>)?.Type, "Business");
+  });
 });

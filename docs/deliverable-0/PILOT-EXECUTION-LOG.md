@@ -24,18 +24,18 @@ Fill **Date**, **Operator**, **Result** as you run. Evidence can be screenshots 
 
 | # | Prompt (short) | First-try pass? | Tools used | Confirm-before-write OK? | Notes |
 |---|----------------|-----------------|------------|---------------------------|-------|
-| 1 | Schema (`schema_lekerdezes` real `Project/{CategoryId}`) | | `schema_lekerdezes` | n/a | Use Id from your Category list |
-| 2 | Contact by email | | `kontakt_kereses` | n/a | Replace example email |
+| 1 | Schema (`schema_lekerdezes` real `Project/{CategoryId}`) | YES | `schema_lekerdezes` | n/a | First try success: Category list queried, valid `38` selected, `Project/38` schema returned (screenshot + pasted response). |
+| 2 | Contact by email | YES | `kontakt_kereses` | n/a | First try success: query executed by email and correctly returned 0 hits with clear next-step suggestion (search by name or create contact). |
 | 3 | Contact detail by Id | | `kontakt_lekeres` | n/a | Use Id from search |
-| 4 | Project list `kategoria_id` + `oldal` | | `projekt_kereses` | n/a | |
+| 4 | Project list `kategoria_id` + `oldal` | YES | `projekt_kereses` | n/a | First try success: listed page 0 for category 38 with 7 projects and expected summary table fields. |
 | 5 | Project detail + todos | | `projekt_lekeres`, `teendo_lekeres` | n/a | Replace project Id |
-| 6 | Create contact (confirm) | | `kontakt_letrehozas` | must be YES | |
-| 7 | Status change (confirm) | | `projekt_statusz_valtas` | must be YES | Use valid `StatusId` from schema |
-| 8 | Create todo (confirm) | | `teendo_letrehozas` | must be YES | Live uses **PUT** |
+| 6 | Create contact (confirm) | YES | `kontakt_letrehozas`, `schema_lekerdezes`, `kontakt_letrehozas` | YES | Confirmed before write. Initial `Type=2` attempt was rejected by API, assistant adapted to `Type=\"Person\"` and creation succeeded with `Id=103`. |
+| 7 | Status change (confirm) | YES | `projekt_statusz_valtas` | YES | First try success: assistant requested confirmation, then updated project `171` status to `3053` successfully. |
+| 8 | Create todo (confirm) | NO | `teendo_letrehozas` | YES | Confirmation step was correct, but first execution failed because `UserId=103` is a contact Id (not a valid assignee user). Assistant asked for valid `UserId` (`166762`/`166867`) or to omit it. |
 | 9 | Invoice list | | `szamla_lekerdezes` | n/a | |
 | 10 | Ambiguous name handling | | `kontakt_kereses` + clarify | n/a | |
 
-**First-try pass rate:** ___ / 10 = ___ %
+**First-try pass rate:** 5 / 10 = 50% *(in progress; update after remaining prompts)*
 
 ---
 

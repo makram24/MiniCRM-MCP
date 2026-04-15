@@ -27,6 +27,28 @@ const mezokSchema = z
   .record(z.string(), z.unknown())
   .describe("Mezőnév → érték (miniCRM API JSON szerint).");
 
+function normalizeContactTypeValue(value: unknown): unknown {
+  if (typeof value !== "string" && typeof value !== "number") return value;
+  const raw = String(value).trim().toLowerCase();
+  if (raw === "2" || raw === "person" || raw === "szemely" || raw === "személy") {
+    return "Person";
+  }
+  if (raw === "1" || raw === "business" || raw === "ceg" || raw === "cég") {
+    return "Business";
+  }
+  return value;
+}
+
+function normalizeContactWriteFields(
+  mezok: Record<string, unknown>
+): Record<string, unknown> {
+  if (!Object.prototype.hasOwnProperty.call(mezok, "Type")) return mezok;
+  return {
+    ...mezok,
+    Type: normalizeContactTypeValue(mezok.Type),
+  };
+}
+
 function parseBodyJson(res: { status: number; bodyText: string }): unknown {
   const t = res.bodyText.trim();
   if (t === "") return null;
@@ -224,10 +246,11 @@ const CRM_TOOL_DEFINITIONS: readonly CrmToolDef[] = [
     async execute(args, ctx) {
       const { mezok } = kontaktLetrehozasSchema.parse(args);
       const reqId = randomUUID();
+      const body = normalizeContactWriteFields(mezok);
       return execCrm(
         ctx.backend,
         ctx.useMock,
-        { method: "PUT", pathname: "/Api/R3/Contact", body: mezok },
+        { method: "PUT", pathname: "/Api/R3/Contact", body },
         "kontakt_letrehozas",
         reqId
       );
@@ -242,10 +265,11 @@ const CRM_TOOL_DEFINITIONS: readonly CrmToolDef[] = [
       const { kontakt_id, mezok } = kontaktModositasSchema.parse(args);
       const reqId = randomUUID();
       const id = coerceRecordId(kontakt_id);
+      const body = normalizeContactWriteFields(mezok);
       return execCrm(
         ctx.backend,
         ctx.useMock,
-        { method: "PUT", pathname: `/Api/R3/Contact/${id}`, body: mezok },
+        { method: "PUT", pathname: `/Api/R3/Contact/${id}`, body },
         "kontakt_modositas",
         reqId
       );
