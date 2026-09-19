@@ -202,7 +202,7 @@ describe("contact Type normalization on write tools", () => {
     const ctx = { backend, useMock: false };
     const r = await invokeCrmTool(
       "kontakt_letrehozas",
-      { mezok: { FirstName: "Makram", LastName: "AlMoghrabi", Type: "2" } },
+      { mezok: { FirstName: "Demo", LastName: "Person", Type: "2" } },
       ctx
     );
     assert.equal(r.isError, undefined);

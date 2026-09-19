@@ -1,1 +1,25 @@
-{"Id":67,"Type":"Szem\u00e9ly","FirstName":"\u00dcgyf\u00e9lszolg\u00e1lat","LastName":"MiniCRM","Email":"help@minicrm.hu","Phone":"+36 1 999 0402","Description":"","Deleted":0,"CreatedBy":"Vass \u00c1d\u00e1m","CreatedAt":"2020-10-13 16:23:01","UpdatedBy":"Vass \u00c1d\u00e1m","UpdatedAt":"2025-05-23 13:55:38","Url":"","BankAccount":"","Swift":"","VatNumber":"","Position":"","Industry":"","Region":"","YearlyRevenue":0,"DataManagement_Consent":"","BusinessId":66,"Tags":[]}
+{
+  "Id": 101,
+  "Type": "Személy",
+  "FirstName": "Demo",
+  "LastName": "Person",
+  "Email": "demo.person@example.com",
+  "Phone": "+36 30 000 0001",
+  "Description": "",
+  "Deleted": 0,
+  "CreatedBy": "Demo User",
+  "CreatedAt": "2026-01-01 00:00:00",
+  "UpdatedBy": "Demo User",
+  "UpdatedAt": "2026-01-01 00:00:00",
+  "Url": "",
+  "BankAccount": "",
+  "Swift": "",
+  "VatNumber": "",
+  "Position": "",
+  "Industry": "",
+  "Region": "",
+  "YearlyRevenue": 0,
+  "DataManagement_Consent": "",
+  "BusinessId": 100,
+  "Tags": []
+}

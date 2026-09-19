@@ -31,7 +31,7 @@ Fill **Date**, **Operator**, **Result** as you run. Evidence can be screenshots 
 | 5 | Project detail + todos | YES | `projekt_lekeres`, `teendo_lekeres` | n/a | First try success: returned project `171` details and linked todo list (1 item, `ID=630`, comment `UAT follow-up`). |
 | 6 | Create contact (confirm) | YES | `kontakt_letrehozas`, `schema_lekerdezes`, `kontakt_letrehozas` | YES | Confirmed before write. Initial `Type=2` attempt was rejected by API, assistant adapted to `Type=\"Person\"` and creation succeeded with `Id=103`. |
 | 7 | Status change (confirm) | YES | `projekt_statusz_valtas` | YES | First try success: assistant requested confirmation, then updated project `171` status to `3053` successfully. |
-| 8 | Create todo (confirm) | YES | `teendo_letrehozas` | YES | First try success: explicit confirmation requested, then todo created (`Teendő ID=630`) for `ProjectId=171`, `UserId=166762`, comment `UAT follow-up`. |
+| 8 | Create todo (confirm) | YES | `teendo_letrehozas` | YES | First try success: explicit confirmation requested, then todo created (`Teendő ID=REDACTED`) for `ProjectId=REDACTED`, `UserId=REDACTED`, comment `UAT follow-up`. |
 | 9 | Invoice list | YES | `szamla_lekerdezes` | n/a | First try success: queried first page, correctly reported 0 invoices, and offered useful next filters (`StatusGroup`, project/contact scope). |
 | 10 | Ambiguous name handling | YES | `kontakt_kereses` + clarify | n/a | First try success: returned 3 matches and asked user to choose the working ID before proceeding. |
 

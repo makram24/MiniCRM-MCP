@@ -3,7 +3,7 @@
     "minicrm": {
       "command": "node",
       "args": [
-        "C:/wamp64/www/ASP/ASP Engeneering Test/minicrm-mcp-server/dist/index.js"
+        "/ABSOLUTE/PATH/TO/minicrm-mcp-server/dist/index.js"
       ],
       "env": {
         "MINICRM_USE_MOCK": "true",

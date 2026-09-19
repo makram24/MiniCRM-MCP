@@ -66,7 +66,7 @@ Note: on some Windows MSIX builds this has opened a **different** path than the 
 
 | Placeholder | Action |
 |-------------|--------|
-| `REPLACE_WITH_ABSOLUTE_PATH/...` | Full path to `minicrm-mcp-server/dist/index.js` (forward slashes OK on Windows in JSON). |
+| `REPLACE_WITH_ABSOLUTE_PATH/...` or `/ABSOLUTE/PATH/TO/...` | Full path to `minicrm-mcp-server/dist/index.js` (forward slashes OK on Windows in JSON). |
 | `env` block | For **mock**: keep `MINICRM_USE_MOCK=true`; leave SystemId/API key empty. For **live**: set `MINICRM_USE_MOCK=false` and real values (or use a wrapper — below). |
 
 The server loads `minicrm-mcp-server/.env` on startup (`dotenv` in `src/index.ts` resolves relative to `dist/`). You can keep secrets **only** in `.env` and omit them from JSON if you use a wrapper script.

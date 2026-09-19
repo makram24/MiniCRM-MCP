@@ -11,7 +11,7 @@
 | OS | Windows 10 (build 19045) |
 | curl / Postman version | *TBD* |
 | Claude Desktop version | 1.2581.0 |
-| miniCRM tenant / SystemId | ---97 |
+| miniCRM tenant / SystemId | REDACTED (last 2 digits only in private notes) |
 
 ## Open items
 

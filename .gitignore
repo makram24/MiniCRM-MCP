@@ -1,0 +1,37 @@
+# Secrets & local env
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Dependencies & build
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+*.tsbuildinfo
+
+# Archives / dumps (never commit project zips)
+*.zip
+*.7z
+*.rar
+
+# Logs & OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Claude Desktop local config (may contain secrets)
+claude_desktop_config.json
+**/claude_desktop_config.json
+!docs/claude_desktop_config.example.json

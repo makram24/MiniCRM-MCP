@@ -1,1 +1,14 @@
-{"Count":1,"Results":[{"Id":8,"Status":"Closed","Comment":"Hiba bejelent\u00e9s","Deadline":"2026-04-08 23:59:00","UserId":166762,"Type":"","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/ToDo\/8"}]}
+{
+  "Count": 1,
+  "Results": [
+    {
+      "Id": 8,
+      "Status": "Closed",
+      "Comment": "Sample follow-up task",
+      "Deadline": "2026-01-08 23:59:00",
+      "UserId": 100001,
+      "Type": "",
+      "Url": "https://r3.minicrm.hu/Api/R3/ToDo/8"
+    }
+  ]
+}

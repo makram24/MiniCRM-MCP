@@ -1,6 +1,8 @@
 # API samples
 
-Save successful JSON responses here during Phase 1 (redact PII if sharing).
+Save successful JSON responses here during Phase 1 (**redact PII / tenant ids before committing**).
+
+Checked-in samples are **anonymized placeholders** for shape reference only — re-generate locally with `SMOKE_SAVE=1` against your own tenant.
 
 ## Smoke runner
 
@@ -30,7 +32,7 @@ Files are written **only** when the response status is **2xx**.
 
 `401 Unauthorized` means miniCRM did **not** accept **HTTP Basic** credentials:
 
-- **Username** = **SystemId** (the number in the URL right after the host when you are logged in, e.g. `https://r3.minicrm.hu/87697/...` → `87697`).
+- **Username** = **SystemId** (the number in the URL right after the host when you are logged in, e.g. `https://r3.minicrm.hu/YOUR_SYSTEM_ID/...` → `YOUR_SYSTEM_ID`).
 - **Password** = **REST API key** (Settings → System → API key; only an **admin** can create it — it is **not** your login password).
 
 Checklist (see `docs/MiniCRM-Integrations-Manual.md` — Basics + API key generation):

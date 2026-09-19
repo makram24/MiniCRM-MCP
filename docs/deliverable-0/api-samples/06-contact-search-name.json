@@ -1,1 +1,22 @@
-{"Count":24,"Results":{"67":{"Id":67,"Name":"MiniCRM \u00dcgyf\u00e9lszolg\u00e1lat","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/67","Type":"Person","Email":"help@minicrm.hu","Phone":"0619990402","BusinessId":66},"70":{"Id":70,"Name":"P\u00e9lda Kft.","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/70","Type":"Business","Email":"help@minicrm.hu","Phone":"+36 1 999 0402"},"71":{"Id":71,"Name":"P\u00e9lda  Patr\u00edcia","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/71","Type":"Person","Email":"help@minicrm.hu","Phone":"+36 1 999 0402","BusinessId":70},"73":{"Id":73,"Name":"Teszt T\u00edmea","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/73","Type":"Person","Email":"help@minicrm.hu","Phone":"+36 1 999 0402","BusinessId":72},"74":{"Id":74,"Name":"P\u00e9lda Zrt.","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/74","Type":"Business","Email":"help@minicrm.hu","Phone":"+36 1 999 0402"},"75":{"Id":75,"Name":"P\u00e9lda P\u00e1l","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/75","Type":"Person","Email":"help@minicrm.hu","Phone":"+36 1 999 0402","BusinessId":74},"76":{"Id":76,"Name":"P\u00e9lda Kft","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/76","Type":"Business","Email":"help@minicrm.hu","Phone":"+36 (1) 999-0402"},"77":{"Id":77,"Name":"P\u00e9lda P\u00e9ter","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/77","Type":"Person","Email":"help@minicrm.hu","Phone":"+36 (1) 999-0402","BusinessId":76},"80":{"Id":80,"Name":"Bemutat\u00f3 Kft.","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/80","Type":"Business","Email":"help@minicrm.hu","Phone":"+36 1 999 0402"},"81":{"Id":81,"Name":"Bemutat\u00f3 Bence","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/81","Type":"Person","Email":"help@minicrm.hu","Phone":"+36 1 999 0402","BusinessId":80},"82":{"Id":82,"Name":"Minta Zrt.","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/82","Type":"Business","Email":"help@minicrm.hu","Phone":"+36 1 999 0402"},"83":{"Id":83,"Name":"Minta M\u00e1rta","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/83","Type":"Person","Email":"help@minicrm.hu","Phone":"+36 1 999 0402","BusinessId":82},"84":{"Id":84,"Name":"Minta Kft.","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/84","Type":"Business","Email":"help@minicrm.hu","Phone":"+36 1 999 0402"},"85":{"Id":85,"Name":"Minta P\u00e9ter","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/85","Type":"Person","Email":"help@minicrm.hu","Phone":"+36 1 999 0402","BusinessId":84},"86":{"Id":86,"Name":"P\u00e9ld\u00e1zat Kft.","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/86","Type":"Business","Email":"","Phone":""},"87":{"Id":87,"Name":"P\u00e9lda  Panni","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/87","Type":"Person","Email":"","Phone":"","BusinessId":86},"88":{"Id":88,"Name":"Bemutat\u00f3 Zrt.","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/88","Type":"Business","Email":"help@minicrm.hu","Phone":"+36 1 999 0402"},"89":{"Id":89,"Name":"Bemutat\u00f3 Barnab\u00e1s","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/89","Type":"Person","Email":"help@minicrm.hu","Phone":"+36 1 999 0402","BusinessId":88},"91":{"Id":91,"Name":"Teszt Tam\u00e1s","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/91","Type":"Person","Email":"","Phone":"","BusinessId":90},"93":{"Id":93,"Name":"\"Els\u0151\" J\u00e1nos","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/93","Type":"Person","Email":"hello+elso@minicrm.hu","Phone":"+36 1 999 0402","BusinessId":92},"94":{"Id":94,"Name":"Egerszegi Kriszti\u00e1n","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/94","Type":"Person","Email":"hello@minicrm.hu","Phone":"+36 1 999 0402","BusinessId":66},"95":{"Id":95,"Name":"Minta Peter","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/95","Type":"Person","Email":"help+2@minicrm.hu","Phone":"+3619990402"},"96":{"Id":96,"Name":"Alp\u00e1r Don\u00e1t","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/96","Type":"Person","Email":"alpardonat02@gmail.com","Phone":"06302016992"},"97":{"Id":97,"Name":"Kontakt MCP-Teszt","Url":"https:\/\/r3.minicrm.hu\/Api\/R3\/Contact\/97","Type":"Person","Email":"mcp.teszt@teszt.hu","Phone":"+36 30 999 8877"}}}
+{
+  "Count": 2,
+  "Results": {
+    "101": {
+      "Id": 101,
+      "Name": "Demo Person",
+      "Url": "https://r3.minicrm.hu/Api/R3/Contact/101",
+      "Type": "Person",
+      "Email": "demo.person@example.com",
+      "Phone": "+36 30 000 0001",
+      "BusinessId": 100
+    },
+    "102": {
+      "Id": 102,
+      "Name": "Demo Company Kft.",
+      "Url": "https://r3.minicrm.hu/Api/R3/Contact/102",
+      "Type": "Business",
+      "Email": "info@example.com",
+      "Phone": "+36 1 000 0000"
+    }
+  }
+}
