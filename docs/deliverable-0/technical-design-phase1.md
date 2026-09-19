@@ -8,7 +8,7 @@
 ## 1. Repository layout (actual)
 
 ```
-ASP Engeneering Test/
+MiniCRM-MCP/
   docs/
     deliverable-0/          # Deliverable 0, phase runbooks, Integrations Manual
     phases/

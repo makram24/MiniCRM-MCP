@@ -1,16 +1,16 @@
-# ASP Consulting & Engineering — Scope of Work Document
+# Makram — Scope of Work Document
 
 **miniCRM Single-User MCP**  
 Local Claude Desktop MCP server for individual miniCRM users.
 
 | Reference | DEMO |
 |-----------|------|
-| Client | DEMO |
+| Author | Makram |
 | Date | 8 April 2026 |
 
 ---
 
-## ASP Consulting — DEMO — TEST PROJECT
+## Makram — DEMO — TEST PROJECT
 
 ### Executive summary
 
@@ -118,7 +118,7 @@ The project consists of 5 sequential phases within one week. Approach: discovery
 **Out of scope in this phase:**
 
 **Decision point**  
-At the end of the phase ASP Consulting presents the mapped CRM structure, API endpoint test results, and planned schemas for the 12 MCP tools. ASP Consulting confirms every endpoint and the API key work. If there is deviation or a blocker, the schedule and scope are decided jointly.
+At the end of the phase Makram presents the mapped CRM structure, API endpoint test results, and planned schemas for the 12 MCP tools. Makram confirms every endpoint and the API key work. If there is deviation or a blocker, the schedule and scope are decided jointly.
 
 •  
 •  
@@ -232,7 +232,7 @@ The project closes within one week. Short feedback with the client at the end of
 
 **Local development and handover model**
 
-MCP server development and testing take place in ASP Consulting’s own environment using the client’s miniCRM API key. The client’s machine is not involved during development. Handover is a demo plus step-by-step installation guide; the client installs on their own machine.
+MCP server development and testing take place in Makram’s own environment using the client’s miniCRM API key. The client’s machine is not involved during development. Handover is a demo plus step-by-step installation guide; the client installs on their own machine.
 
 **Required access**
 
@@ -347,11 +347,11 @@ This document is a project proposal. The following steps are required to start t
 3. **Provision of access** — Send miniCRM SystemId and API key; this is the only credential needed for development.  
 4. **Kick-off and project start** — Kick-off meeting, then immediate start of Phase 1.
 
-For questions, please contact us at the details below.
+For questions, please contact:
 
-**Ádám Vass**  
-ASP Consulting & Engineering — adam.vass@aspconsulting.dev — aspconsulting.dev  
+**Makram**  
+Portfolio project — miniCRM MCP server  
 
 ---
 
-*English translation of **Teszt_Projekt_MCP.pdf** (ASP Consulting scope of work). Identifiers (tool names, file names, JSON keys) are unchanged from the source.*
+*Scope document for the Makram miniCRM Single-User MCP portfolio project. Identifiers (tool names, file names, JSON keys) match the implementation.*

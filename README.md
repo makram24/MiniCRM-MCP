@@ -1,6 +1,6 @@
 # miniCRM MCP server
 
-Local **Model Context Protocol (MCP)** bridge between **Claude Desktop** and the **miniCRM REST API**. Built as a consulting demo: 12 Hungarian-named CRM tools, mock or live backends, rate limiting, and documented handover.
+Local **Model Context Protocol (MCP)** bridge between **Claude Desktop** and the **miniCRM REST API**. Portfolio project by **Makram**: 12 Hungarian-named CRM tools, mock or live backends, rate limiting, and documented handover.
 
 ## Quick start (mock — no API key)
 

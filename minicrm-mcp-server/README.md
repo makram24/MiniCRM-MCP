@@ -1,6 +1,6 @@
 # miniCRM MCP server
 
-Local **Model Context Protocol** server for **miniCRM** (scope: `docs/Teszt-Projekt-MCP.md`).
+Local **Model Context Protocol** server for **miniCRM** (portfolio by Makram; scope: `docs/Teszt-Projekt-MCP.md`).
 
 ## Status
 

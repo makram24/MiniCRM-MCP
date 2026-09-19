@@ -17,8 +17,10 @@
   },
   "keywords": [
     "mcp",
-    "minicrm"
+    "minicrm",
+    "makram"
   ],
+  "author": "Makram",
   "license": "UNLICENSED",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
