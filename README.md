@@ -16,6 +16,19 @@ npm start
 
 Claude Desktop sample config: [`docs/claude_desktop_config.example.json`](docs/claude_desktop_config.example.json) (replace the absolute path placeholder; keep mock mode for demos).
 
+## Agent operator skills (paid)
+
+The MCP server is free. For production-safe agent behaviour (schema-first CategoryIds, confirm-before-write, multi-match contacts), use the operator skills:
+
+- **English:** [SkillHQ](https://skillhq.dev/skills/makramalmoghrabi/minicrm-operator) · [BuySkills](https://app.buyskills.ai/plugins/makram24-minicrm-operator) — $24 · [Agensi](https://www.agensi.io/skills/minicrm-operator-safe-agent-crm-workflows)
+- **Magyar:** [SkillHQ](https://skillhq.dev/skills/makramalmoghrabi/minicrm-operator-hu) · [BuySkills](https://app.buyskills.ai/plugins/makram24-minicrm-operator-hu) — $24 · [Agensi](https://www.agensi.io/skills/minicrm-oper-tor-biztons-gos-crm-gyn-k-munkafolyamat)
+
+Building your own CRM MCP? See **CRM MCP Builder** — [SkillHQ](https://skillhq.dev/skills/makramalmoghrabi/crm-mcp-builder) · [BuySkills](https://app.buyskills.ai/plugins/makram24-crm-mcp-builder) — $39 · [Agensi](https://www.agensi.io/skills/crm-mcp-builder-mock-to-live-agent-bridge).
+
+Operating any write MCP (not just miniCRM)? See **MCP Operator Generic** — [SkillHQ](https://skillhq.dev/skills/makramalmoghrabi/mcp-operator-generic) · [BuySkills](https://app.buyskills.ai/plugins/makram24-mcp-operator-generic) — $29 · [Agensi](https://www.agensi.io/skills/mcp-operator-confirm-before-write-for-any-server).
+
+Skills are authored in a private skills monorepo; this repository stays the open MCP lead magnet.
+
 ## What’s included
 
 | Path | Description |
